@@ -40,4 +40,4 @@ Spike. See [`docs/spike-report.md`](docs/spike-report.md).
 
 ## Licence
 
-Apache-2.0. Third-party notices are in [`LICENSES.md`](LICENSES.md).
+MIT. Third-party notices (Anny, MediaPipe and the bundled assets keep their own Apache-2.0 and CC0 licences) are in [`LICENSES.md`](LICENSES.md).
