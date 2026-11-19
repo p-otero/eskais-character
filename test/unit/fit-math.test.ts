@@ -180,3 +180,22 @@ describe("reduceScan", () => {
     expect(state.status).toBe("error")
   })
 })
+
+describe("scan errors", () => {
+  it("maps failures to stable codes and ends the hook state in error", async () => {
+    const { errorCode, ScanError } = await import("../../src/scan/errors.ts")
+    const { AssetIntegrityError, AssetLoadError } = await import("../../src/scan/loader.ts")
+    const { CapabilityError } = await import("../../src/scan/detect.ts")
+    expect(errorCode(new CapabilityError("x"))).toBe("webgl2-unavailable")
+    expect(errorCode(new AssetIntegrityError("x"))).toBe("asset-integrity")
+    expect(errorCode(new AssetLoadError("x"))).toBe("asset-load")
+    expect(errorCode(new ScanError("no-face", "x"))).toBe("no-face")
+    expect(errorCode(new TypeError("x"))).toBe("internal")
+    const state = reduceScan(reduceScan(initialScanState, { type: "start" }), {
+      type: "event",
+      event: { type: "error", error: { code: "no-face", message: "No face." } },
+    })
+    expect(state.status).toBe("error")
+    expect((state.error as InstanceType<typeof ScanError>).code).toBe("no-face")
+  })
+})

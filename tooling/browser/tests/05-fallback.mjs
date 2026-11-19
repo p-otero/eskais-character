@@ -15,10 +15,10 @@ export async function withoutWebglTheEngineSaysSoUpFront() {
     const outcome = await page.evaluate(() =>
       globalThis.harness.init("auto", "lite").then(
         () => "ready",
-        (error) => error.message,
+        (error) => `${error.name} ${error.code}: ${error.message}`,
       ),
     )
-    assert.match(outcome, /needs WebGL2/)
+    assert.match(outcome, /^ScanError webgl2-unavailable: .*needs WebGL2/)
   } finally {
     await browser.close()
   }

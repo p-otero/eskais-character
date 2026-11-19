@@ -3,6 +3,10 @@
 
 import { pinnedAssets, type AssetId } from "./assets.ts"
 
+export class AssetLoadError extends Error {
+  override name = "AssetLoadError"
+}
+
 export class AssetIntegrityError extends Error {
   override name = "AssetIntegrityError"
 }
@@ -16,14 +20,20 @@ export type AssetUrls = Partial<Record<AssetId, string>>
 export async function fetchPinned(id: AssetId, urls: AssetUrls, signal?: AbortSignal): Promise<ArrayBuffer> {
   const pinned = pinnedAssets[id]
   const url = urls[id] ?? pinned.url
-  const response = await fetch(url, {
-    method: "GET",
-    credentials: "omit",
-    referrerPolicy: "no-referrer",
-    cache: "force-cache",
-    ...(signal ? { signal } : {}),
-  })
-  if (!response.ok) throw new Error(`Could not load ${id} (${String(response.status)}).`)
+  let response: Response
+  try {
+    response = await fetch(url, {
+      method: "GET",
+      credentials: "omit",
+      referrerPolicy: "no-referrer",
+      cache: "force-cache",
+      ...(signal ? { signal } : {}),
+    })
+  } catch (error) {
+    if (signal?.aborted) throw error
+    throw new AssetLoadError(`Could not load ${id}: the request failed.`)
+  }
+  if (!response.ok) throw new AssetLoadError(`Could not load ${id} (${String(response.status)}).`)
   const bytes = await response.arrayBuffer()
   if (bytes.byteLength !== pinned.bytes)
     throw new AssetIntegrityError(`${id} is ${String(bytes.byteLength)} bytes; the pin says ${String(pinned.bytes)}.`)

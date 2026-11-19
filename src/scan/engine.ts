@@ -2,6 +2,7 @@
 // scan never blocks the UI thread.
 
 import type { Delegate } from "./detect.ts"
+import { errorCode, errorMessage, ScanError } from "./errors.ts"
 import type { AssetUrls } from "./loader.ts"
 import type { WorkerRequest, WorkerResponse } from "./protocol.ts"
 import type { ScanEvent, ScanInput, ScanOptions } from "./types.ts"
@@ -18,7 +19,10 @@ export interface ScanEngineOptions {
 }
 
 export interface ScanEngine {
-  /** Resolves when the models are loaded; `delegate` says whether MediaPipe got the GPU. */
+  /**
+   * Resolves when the models are loaded; `delegate` says whether MediaPipe got the GPU. Rejects with a ScanError
+   * (code "webgl2-unavailable", "asset-load", "asset-integrity" or "worker"); `scan()` then yields that error event.
+   */
   ready: Promise<{ delegate: Delegate; ms: number }>
   scan(input: ScanInput, options?: ScanOptions): AsyncGenerator<ScanEvent, void, undefined>
   /** Test hook: landmarks of one image, without a scan. */
@@ -28,6 +32,10 @@ export interface ScanEngine {
 
 function defaultWorker(): Worker {
   return new Worker(new URL("./worker.ts", import.meta.url), { type: "module", name: "eskais-character-scan" })
+}
+
+function failure(error: unknown): Extract<ScanEvent, { type: "error" }> {
+  return { type: "error", error: { code: errorCode(error), message: errorMessage(error) } }
 }
 
 async function toBitmap(source: Blob | ImageBitmap): Promise<ImageBitmap> {
@@ -47,12 +55,15 @@ export function createScanEngine(options: ScanEngineOptions = {}): ScanEngine {
   worker.addEventListener("message", (event: MessageEvent<WorkerResponse>) => {
     const message = event.data
     if (message.type === "ready") resolveReady({ delegate: message.delegate, ms: message.ms })
-    else if (message.type === "init-error") rejectReady(new Error(message.message))
+    else if (message.type === "init-error") rejectReady(new ScanError(message.code, message.message))
     else listeners.get(message.id)?.(message)
   })
-  worker.addEventListener("error", (event) =>
-    rejectReady(new Error(event.message || "The scan worker failed to start.")),
-  )
+  worker.addEventListener("error", (event) => {
+    const message = event.message || "The scan worker failed."
+    rejectReady(new ScanError("worker", message))
+    // A crash mid-scan ends every scan in flight with an error event.
+    for (const [id, listener] of listeners) listener({ type: "error", id, code: "worker", message })
+  })
   const send = (request: WorkerRequest, transfer: Transferable[] = []) => worker.postMessage(request, transfer)
   send({
     type: "init",
@@ -64,7 +75,12 @@ export function createScanEngine(options: ScanEngineOptions = {}): ScanEngine {
   async function* scan(input: ScanInput, scanOptions: ScanOptions = {}): AsyncGenerator<ScanEvent, void, undefined> {
     const { signal } = scanOptions
     signal?.throwIfAborted()
-    await ready
+    try {
+      await ready
+    } catch (error) {
+      yield failure(error)
+      return
+    }
     const id = nextId++
     const queue: WorkerResponse[] = []
     let wake: (() => void) | undefined
@@ -75,8 +91,15 @@ export function createScanEngine(options: ScanEngineOptions = {}): ScanEngine {
     const abort = () => send({ type: "cancel", id })
     signal?.addEventListener("abort", abort, { once: true })
     try {
-      const face = await toBitmap(input.face)
-      const body = input.body ? await toBitmap(input.body) : null
+      let face: ImageBitmap
+      let body: ImageBitmap | null
+      try {
+        face = await toBitmap(input.face)
+        body = input.body ? await toBitmap(input.body) : null
+      } catch {
+        yield { type: "error", error: { code: "unreadable-image", message: "A photo could not be decoded." } }
+        return
+      }
       send({ type: "scan", id, face, body, hints: scanOptions.hints ?? {} }, body ? [face, body] : [face])
       for (;;) {
         while (queue.length === 0) {
@@ -93,7 +116,10 @@ export function createScanEngine(options: ScanEngineOptions = {}): ScanEngine {
         if (!message) continue
         if (message.type === "event") yield message.event
         else if (message.type === "end") return
-        else if (message.type === "error") throw new Error(message.message)
+        else if (message.type === "error") {
+          yield { type: "error", error: { code: message.code, message: message.message } }
+          return
+        }
       }
     } finally {
       signal?.removeEventListener("abort", abort)
@@ -112,7 +138,7 @@ export function createScanEngine(options: ScanEngineOptions = {}): ScanEngine {
         listeners.set(id, (message) => {
           listeners.delete(id)
           if (message.type === "detected") resolve(message)
-          else if (message.type === "error") reject(new Error(message.message))
+          else if (message.type === "error") reject(new ScanError(message.code, message.message))
         })
         send({ type: "detect", id, kind, image: bitmap }, [bitmap])
       })

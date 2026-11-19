@@ -2,6 +2,7 @@
 // are closed as soon as their stage is done; nothing derived from pixels leaves except landmarks and the character.
 
 import { createDetectors, type Detectors } from "./detect.ts"
+import { errorCode, errorMessage } from "./errors.ts"
 import type { AssetUrls } from "./loader.ts"
 import type { WorkerRequest, WorkerResponse } from "./protocol.ts"
 import { measureBody } from "./measure-body.ts"
@@ -31,8 +32,7 @@ scope.addEventListener("message", (message) => {
       // Everything a scan needs is downloaded here, so the scan itself never touches the network.
       Promise.all([detectors, loadModel(urls)]).then(
         ([ready]) => post({ type: "ready", delegate: ready.delegate, ms: performance.now() - started }),
-        (error: unknown) =>
-          post({ type: "init-error", message: error instanceof Error ? error.message : "Loading failed." }),
+        (error: unknown) => post({ type: "init-error", code: errorCode(error), message: errorMessage(error) }),
       )
       return
     }
@@ -57,7 +57,7 @@ scope.addEventListener("message", (message) => {
           landmarks ? [landmarks.buffer] : [],
         )
       })().catch((error: unknown) => {
-        post({ type: "error", id: request.id, message: error instanceof Error ? error.message : "Detection failed." })
+        post({ type: "error", id: request.id, code: errorCode(error), message: errorMessage(error) })
       })
       return
     }
@@ -77,7 +77,7 @@ scope.addEventListener("message", (message) => {
         post({ type: "end", id: request.id })
       })()
         .catch((error: unknown) => {
-          post({ type: "error", id: request.id, message: error instanceof Error ? error.message : "The scan failed." })
+          post({ type: "error", id: request.id, code: errorCode(error), message: errorMessage(error) })
         })
         .finally(() => {
           request.face.close()

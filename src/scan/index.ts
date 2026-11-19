@@ -2,7 +2,8 @@ export { pinnedAssets, assetIds } from "./assets.ts"
 export type { AssetId, PinnedAsset } from "./assets.ts"
 export { createScanEngine } from "./engine.ts"
 export type { ScanEngine, ScanEngineOptions } from "./engine.ts"
-export { AssetIntegrityError } from "./loader.ts"
+export { AssetIntegrityError, AssetLoadError } from "./loader.ts"
+export { ScanError, scanErrorCodes } from "./errors.ts"
 export type { AssetUrls } from "./loader.ts"
 export { CapabilityError } from "./detect.ts"
 export type { Delegate } from "./detect.ts"
@@ -12,6 +13,7 @@ export type {
   CharacterParams,
   HairChoice,
   Hex,
+  ScanErrorCode,
   ScanEvent,
   ScanHints,
   ScanInput,

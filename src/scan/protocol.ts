@@ -3,6 +3,7 @@
 
 import type { Delegate } from "./detect.ts"
 import type { AssetUrls } from "./loader.ts"
+import type { ScanErrorCode } from "./errors.ts"
 import type { BodyFeatures } from "./measure-body.ts"
 import type { ScanEvent, ScanHints } from "./types.ts"
 
@@ -37,10 +38,10 @@ export type WorkerRequest = InitRequest | ScanRequest | CancelRequest | DetectRe
 
 export type WorkerResponse =
   | { type: "ready"; delegate: Delegate; ms: number }
-  | { type: "init-error"; message: string }
+  | { type: "init-error"; code: ScanErrorCode; message: string }
   | { type: "event"; id: number; event: ScanEvent }
   | { type: "end"; id: number }
-  | { type: "error"; id: number; message: string }
+  | { type: "error"; id: number; code: ScanErrorCode; message: string }
   | {
       type: "detected"
       id: number

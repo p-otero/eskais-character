@@ -18,6 +18,7 @@ import { morphTargetNames, morphWeights, writeCharacterGlb, type CharacterColors
 import { hairCatalogue, hairStyle } from "../model/hair.ts"
 import { hex, sampleFaceColors, type FaceColors, type Rgb } from "./colors.ts"
 import type { Detectors } from "./detect.ts"
+import { ScanError } from "./errors.ts"
 import { createBodyFeatureModel, fitBody, type BodyCalibration } from "./fit-body.ts"
 import { fitFace, type FaceLandmarkMap } from "./fit-face.ts"
 import { pickHair } from "./hair-pick.ts"
@@ -96,7 +97,7 @@ export async function runScan(
 
   stage("detect-face")
   const face = detectors.detectFace(request.face)
-  if (!face) throw new Error("No face found in the face photo.")
+  if (!face) throw new ScanError("no-face", "No face found in the face photo.")
   const faceLandmarks = points2d(face.landmarks, 3)
   context.emit({ type: "landmarks", source: "face", points: faceLandmarks, aspect: face.width / face.height }, [
     faceLandmarks.buffer,

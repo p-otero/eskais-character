@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef } from "react"
 import type { ScanEngine } from "../scan/engine.ts"
+import { ScanError } from "../scan/errors.ts"
 import type { Character, ScanEvent, ScanInput, ScanOptions, ScanStage } from "../scan/types.ts"
 
 export type ScanStatus = "idle" | "scanning" | "done" | "error" | "cancelled"
@@ -55,6 +56,8 @@ export function reduceScan(state: CharacterScanState, action: Action): Character
           return { ...state, model: { glb: event.glb, targetNames: event.targetNames } }
         case "progress":
           return { ...state, progress: event.value, weights: event.weights }
+        case "error":
+          return { ...state, status: "error", stage: null, error: new ScanError(event.error.code, event.error.message) }
         case "done":
           return {
             ...state,

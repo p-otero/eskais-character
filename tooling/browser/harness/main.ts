@@ -34,6 +34,17 @@ const harness = {
       .measureUserAgentSpecificMemory
     return measure && crossOriginIsolated ? (await measure.call(performance)).bytes : null
   },
+  /** A scan of a blank, faceless image drawn here: the error path, with no image file involved. */
+  async scanBlank() {
+    const canvas = new OffscreenCanvas(320, 320)
+    const context = canvas.getContext("2d")!
+    context.fillStyle = "#9aa"
+    context.fillRect(0, 0, 320, 320)
+    const blank = await canvas.convertToBlob({ type: "image/png" })
+    const events: ScanEvent[] = []
+    for await (const event of engine!.scan({ face: blank })) events.push(event)
+    return events.map((event) => (event.type === "error" ? event : { type: event.type }))
+  },
   async scan(face: number[], body: number[] | null, heightCm?: number, light = false) {
     const events: { type: string; at: number; detail: unknown }[] = []
     const started = performance.now()

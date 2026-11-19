@@ -213,16 +213,20 @@ const engine = createScanEngine({
   delegate?: "auto" | "CPU" | "GPU",              // auto: GPU on hardware WebGL, CPU on software
   poseModel?: "full" | "lite",
 })
-await engine.ready // { delegate, ms }; rejects with CapabilityError without WebGL2, AssetIntegrityError on a bad file
+await engine.ready // { delegate, ms }; rejects with ScanError { code } (e.g. "webgl2-unavailable", "asset-integrity")
 
 for await (const e of engine.scan({ face, body }, { signal, hints: { heightCm } })) { /* or scanCharacter(...) */ }
 
 type ScanEvent =
   | { type: "stage"; stage: ScanStage; ms?: number }                        // started, then finished with ms
-  | { type: "landmarks"; source: "face" | "body"; points: Float32Array; aspect: number } // x,y pairs in 0..1
+  | { type: "landmarks"; source: "face" | "body"; points: Float32Array; aspect: number }
+    // x,y pairs normalised to the original photo (not a letterboxed input); aspect = photo width / height
   | { type: "model"; glb: Uint8Array; targetNames: string[] }               // once, before fitting
   | { type: "progress"; value: number; weights: Float32Array }              // aligned with targetNames
   | { type: "done"; character: Character }
+  | { type: "error"; error: { code: ScanErrorCode; message: string } } // always last; AbortSignal still throws AbortError
+
+type ScanErrorCode = "no-face" | "unreadable-image" | "webgl2-unavailable" | "asset-integrity" | "asset-load" | "worker" | "internal"
 
 interface Character {
   glb: Uint8Array                  // skinned body + eyes + hair, fitted weights as mesh defaults

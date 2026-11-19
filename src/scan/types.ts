@@ -2,6 +2,7 @@
 
 import type { Phenotype } from "../model/anny.ts"
 import type { HairLength } from "../model/hair.ts"
+import type { ScanErrorCode } from "./errors.ts"
 
 /** sRGB colour as "#rrggbb". */
 export type Hex = `#${string}`
@@ -60,13 +61,24 @@ export interface Character {
   quality: { face: number; body: number | null; warnings: string[] }
 }
 
+export type { ScanErrorCode }
+
 export type ScanEvent =
   /** A stage started (ms omitted) or finished (ms is its duration). */
   | { type: "stage"; stage: ScanStage; ms?: number }
-  /** Normalised 2D points (x, y pairs in 0..1) for the UI to light up. */
+  /**
+   * Landmarks for the UI to light up: x, y pairs normalised to the original photo (x by its width, y by its height;
+   * MediaPipe maps its letterboxed input back before returning them). `aspect` is that photo's width / height, so no
+   * letterbox correction applies. Points may fall slightly outside 0..1 when a feature is cut off by the frame.
+   */
   | { type: "landmarks"; source: "face" | "body"; points: Float32Array; aspect: number }
   /** The base character: mean shape with every morph target, weights at zero. Sent once, before fitting. */
   | { type: "model"; glb: Uint8Array; targetNames: string[] }
   /** Weights while the fit converges, aligned with the model's `targetNames`; `value` is 0..1 overall progress. */
   | { type: "progress"; value: number; weights: Float32Array }
   | { type: "done"; character: Character }
+  /**
+   * The scan failed; always the last event. Cancelling through the AbortSignal is not a failure: the iterator throws
+   * the signal's AbortError instead.
+   */
+  | { type: "error"; error: { code: ScanErrorCode; message: string } }
