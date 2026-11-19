@@ -1,0 +1,9 @@
+node_modules/
+.tsbuild/
+.venv-bake/
+dist/
+demo/dist/
+tooling/perf/results/
+test-results/
+*.log
+.DS_Store
