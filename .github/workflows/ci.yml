@@ -1,0 +1,121 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.4
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - run: bun install --frozen-lockfile
+      - run: bun run lint
+      - run: bun run format:check
+      - run: bun run typecheck
+      - run: bun run test
+
+  guards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.4
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - run: bun install --frozen-lockfile
+      - name: Every image is a synthetic render from tooling/synth, re-rendered and compared pixel by pixel
+        run: bun tooling/check-images.ts --rerender
+      - name: Every dependency and asset has a licence on the allow-list; nothing from the SMPL / Max Planck family
+        run: node tooling/check-licences.mjs
+      - name: bun.lock matches package.json and every pin is exact
+        run: node tooling/check-lockfile.mjs
+      - name: Every pinned dependency is at least 7 days old
+        run: node tooling/check-dependency-age.mjs --require-network
+
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.4
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - run: bun install --frozen-lockfile
+      - run: bunx playwright install --with-deps chromium
+      - name: Cache the pinned MediaPipe models (keyed on their SHA-256 list)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .cache/models
+          key: models-${{ hashFiles('assets/ASSETS.json') }}
+      - name: Fetch the pinned models and verify their SHA-256
+        run: node tooling/fetch-models.mjs
+      - name: Scan in Chrome (SwiftShader), worker and WASM smoke, privacy network interception, GLB validation
+        run: bun run test:browser
+
+  perf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.4
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - run: bun install --frozen-lockfile
+      - run: bunx playwright install --with-deps chromium
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .cache/models
+          key: models-${{ hashFiles('assets/ASSETS.json') }}
+      - run: node tooling/fetch-models.mjs
+      - name: Performance budgets (time per stage, download size gzip and brotli, peak memory, main-thread long tasks)
+        run: bun run perf:ci
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: perf-ci
+          path: tooling/perf/results/ci.json
+          if-no-files-found: ignore
+
+  passed:
+    if: always()
+    needs: [check, guards, browser, perf]
+    runs-on: ubuntu-latest
+    steps:
+      - name: All required jobs passed
+        run: test "$RESULTS" = "success success success success"
+        env:
+          RESULTS: ${{ needs.check.result }} ${{ needs.guards.result }} ${{ needs.browser.result }} ${{ needs.perf.result }}

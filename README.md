@@ -17,11 +17,11 @@ live in the Eskais UI component library (`ModelViewer`, `ModelScan`), which cons
 - **Commercial-safe licences only.** See [`LICENSES.md`](LICENSES.md) and [`docs/licences.md`](docs/licences.md).
   SMPL, SMPL-X and anything trained on SMPL or Max Planck data are forbidden.
 
-| Module                     | What it is                                                        |
-| -------------------------- | ----------------------------------------------------------------- |
-| `eskais-character/scan`    | `scanCharacter({ face, body }, { signal })`: photos → event stream |
-| `eskais-character/motion`  | later: rig, glTF clips, retargeting                                |
-| `eskais-character/react`   | `useCharacterScan(engine)`: maps scan events to props             |
+| Module                    | What it is                                                         |
+| ------------------------- | ------------------------------------------------------------------ |
+| `eskais-character/scan`   | `scanCharacter({ face, body }, { signal })`: photos → event stream |
+| `eskais-character/motion` | later: rig, glTF clips, retargeting                                |
+| `eskais-character/react`  | `useCharacterScan(engine)`: maps scan events to props              |
 
 ## Privacy rules (hard constraints)
 

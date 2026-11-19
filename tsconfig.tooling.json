@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2024", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "types": ["node", "bun"],
+    "allowJs": true,
+    "checkJs": false,
+    "outDir": ".tsbuild/tooling",
+    "tsBuildInfoFile": ".tsbuild/tooling.tsbuildinfo"
+  },
+  "references": [{ "path": "./tsconfig.runtime.json" }],
+  "include": ["test", "tooling", "demo", "vitest.config.ts"]
+}
