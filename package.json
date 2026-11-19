@@ -1,0 +1,71 @@
+{
+  "name": "eskais-character",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Local, in-browser engine that turns photos into a stylised, rigged character with a face.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/p-otero/eskais-character.git"
+  },
+  "type": "module",
+  "exports": {
+    "./scan": "./src/scan/index.ts",
+    "./motion": "./src/motion/index.ts",
+    "./react": "./src/react/index.ts"
+  },
+  "scripts": {
+    "lint": "oxlint --deny-warnings && oxlint --type-aware --deny-warnings -c tooling/oxlint-type-aware.json src tooling test",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "typecheck": "tsc -b",
+    "test": "vitest run",
+    "test:browser": "node tooling/browser/run.mjs",
+    "guards": "bun tooling/check-images.ts --rerender && node tooling/check-licences.mjs && node tooling/check-lockfile.mjs",
+    "deps:age": "node tooling/check-dependency-age.mjs",
+    "synth": "bun tooling/synth/generate.ts",
+    "bake": "python tooling/bake/bake_anny.py",
+    "demo": "vite --config demo/vite.config.ts",
+    "demo:build": "vite build --config demo/vite.config.ts",
+    "perf": "bun tooling/perf/run.ts",
+    "perf:ci": "bun tooling/perf/ci.ts",
+    "glb:validate": "node tooling/validate-glb.mjs",
+    "verify": "bun run lint && bun run format:check && bun run typecheck && bun run test && bun run guards && bun run deps:age && bun run test:browser && bun run perf:ci",
+    "guard:images": "bun tooling/check-images.ts",
+    "fetch:models": "node tooling/fetch-models.mjs",
+    "calibrate": "bun tooling/calibrate/face-landmarks.ts && bun tooling/calibrate/detect-set.ts --seed=2000 --count=32 && bun tooling/calibrate/body.ts --write && bun tooling/calibrate/detect-set.ts --seed=4000 --count=300 && bun tooling/calibrate/train-priors.ts --seed=4000",
+    "evaluate": "bun tooling/calibrate/detect-set.ts --seed=1 --count=24 && bun tooling/calibrate/eval-face.ts --seed=1 && bun tooling/calibrate/body.ts --seed=1 && bun tooling/calibrate/colors.ts --seed=4000",
+    "side-by-side": "bun tooling/calibrate/side-by-side.ts --count=4"
+  },
+  "dependencies": {
+    "@mediapipe/tasks-vision": "1.2.3"
+  },
+  "devDependencies": {
+    "@p-otero/oxlint-rules": "github:p-otero/oxlint-rules#835a22baa11bdd98e5e2d5818de71dc84e66849d",
+    "@types/bun": "1.4.4",
+    "@types/node": "26.6.6",
+    "@types/react": "19.3.0",
+    "@types/three": "0.187.0",
+    "fast-check": "4.10.2",
+    "gltf-validator": "2.0.0-dev.3.10",
+    "oxfmt": "0.78.0",
+    "oxlint": "1.93.0",
+    "oxlint-tsgolint": "7.0.2005",
+    "playwright": "1.65.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "three": "0.187.0",
+    "typescript": "7.0.2",
+    "vite": "8.3.8",
+    "vitest": "5.1.0"
+  },
+  "peerDependencies": {
+    "react": ">=19"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "packageManager": "bun@1.4.4"
+}

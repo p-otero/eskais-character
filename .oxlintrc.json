@@ -1,0 +1,91 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "extends": ["./node_modules/@p-otero/oxlint-rules/presets/base.json"],
+  "plugins": ["typescript", "import", "unicorn", "oxc", "vitest"],
+  "jsPlugins": ["./node_modules/@p-otero/oxlint-rules/dist/plugin.js", "./tooling/oxlint-plugin-character/index.js"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn"
+  },
+  "options": {
+    "reportUnusedDisableDirectives": "error"
+  },
+  "ignorePatterns": [
+    "node_modules/**",
+    ".tsbuild/**",
+    ".venv-bake/**",
+    ".cache/**",
+    ".synth/**",
+    "assets/**",
+    "dist/**",
+    "demo/dist/**",
+    "tooling/perf/results/**"
+  ],
+  "rules": {
+    "p-otero/require-suppression-reason": "error",
+    "p-otero/no-low-value-comments": "error",
+    "oxc/no-map-spread": "off",
+    "unicorn/prefer-set-has": "off",
+    "vitest/require-mock-type-parameters": "off",
+    "unicorn/require-post-message-target-origin": "off"
+  },
+  "overrides": [
+    {
+      "files": ["src/**"],
+      "rules": {
+        "character/no-console": "error",
+        "character/no-network-outside-loader": "error",
+        "character/no-node-builtins": "error",
+        "character/no-image-data-in-messages": "error"
+      }
+    },
+    {
+      "files": ["src/react/**"],
+      "plugins": ["react"],
+      "rules": {
+        "react/rules-of-hooks": "error",
+        "react/exhaustive-deps": "error",
+        "react/purity": "error",
+        "react/refs": "error",
+        "react/immutability": "error",
+        "react/globals": "error",
+        "react/set-state-in-effect": "error",
+        "react/set-state-in-render": "error",
+        "react/no-deriving-state-in-effects": "error",
+        "react/exhaustive-effect-dependencies": "error",
+        "react/static-components": "error",
+        "react/no-array-index-key": "error",
+        "react/no-unstable-nested-components": [
+          "error",
+          {
+            "allowAsProps": true
+          }
+        ],
+        "react/react-in-jsx-scope": "off",
+        "p-otero/one-public-component": "off",
+        "p-otero/component-name-matches-file": "off",
+        "p-otero/max-component-lines": "off",
+        "p-otero/no-large-private-component": "off",
+        "p-otero/no-effect-outside-hooks": [
+          "error",
+          {
+            "allow": ["**/hooks/**", "**/use-*.ts"]
+          }
+        ],
+        "p-otero/no-callback-prop-in-effect-deps": "error",
+        "p-otero/require-effect-fetch-cleanup": "error",
+        "p-otero/prefer-sync-external-store": "error",
+        "p-otero/no-latest-ref-effect": "error",
+        "p-otero/no-sticky-request-effect": "error"
+      }
+    },
+    {
+      "files": ["test/**", "tooling/**"],
+      "rules": {
+        "max-lines": "off",
+        "no-await-in-loop": "off"
+      }
+    }
+  ]
+}
