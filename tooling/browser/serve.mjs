@@ -23,7 +23,10 @@ const types = {
 const remote = {
   "cdn.jsdelivr.net": (path) => {
     const match = path.match(/^\/npm\/@mediapipe\/tasks-vision@1\.2\.3\/wasm\/(.+)$/)
-    return match && join(root, "node_modules/@mediapipe/tasks-vision/wasm", match[1])
+    if (match) return join(root, "node_modules/@mediapipe/tasks-vision/wasm", match[1])
+    // The package's own assets on the CDN (the fallback when a bundler didn't emit them), served from this checkout.
+    const own = path.match(/^\/npm\/eskais-character@[\d.]+\/assets\/((?:anny|hair)\/[a-z]+\.bin)$/)
+    return own && join(root, "assets", own[1])
   },
   "storage.googleapis.com": (path) => {
     const match = path.match(/^\/mediapipe-models\/.+\/float16\/1\/([a-z_]+\.task)$/)

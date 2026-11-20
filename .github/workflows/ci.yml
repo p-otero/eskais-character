@@ -32,6 +32,31 @@ jobs:
       - run: bun run format:check
       - run: bun run typecheck
       - run: bun run test
+      - name: Package checks (build, publint, Are the Types Wrong)
+        run: bun run check:package
+
+  consumers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.4
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - run: bun install --frozen-lockfile
+      - run: bunx playwright install --with-deps chromium
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .cache/models
+          key: models-${{ hashFiles('assets/ASSETS.json') }}
+      - run: node tooling/fetch-models.mjs
+      - name: The packed package scans in fresh Vite, Next.js (Turbopack and webpack) and bun apps
+        run: bun run test:consumers
 
   guards:
     runs-on: ubuntu-latest
@@ -112,10 +137,10 @@ jobs:
 
   passed:
     if: always()
-    needs: [check, guards, browser, perf]
+    needs: [check, consumers, guards, browser, perf]
     runs-on: ubuntu-latest
     steps:
       - name: All required jobs passed
-        run: test "$RESULTS" = "success success success success"
+        run: test "$RESULTS" = "success success success success success"
         env:
-          RESULTS: ${{ needs.check.result }} ${{ needs.guards.result }} ${{ needs.browser.result }} ${{ needs.perf.result }}
+          RESULTS: ${{ needs.check.result }} ${{ needs.consumers.result }} ${{ needs.guards.result }} ${{ needs.browser.result }} ${{ needs.perf.result }}

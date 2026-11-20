@@ -27,5 +27,5 @@
     "typescript/no-misused-promises": "error",
     "typescript/await-thenable": "error"
   },
-  "ignorePatterns": ["**/*.js", "**/*.mjs"]
+  "ignorePatterns": ["**/*.js", "**/*.mjs", "**/package/consumers/**"]
 }
