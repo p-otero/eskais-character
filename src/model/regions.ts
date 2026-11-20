@@ -186,7 +186,7 @@ export function paintRegions(
     if (above < -2.6 || Math.abs(x) > 1.8 * d) continue
     // Brows: an arc above each eye, highest a little outside the eye centre, thinning towards the temple.
     const fromEye = ax - 0.5
-    const arc = 0.36 + 0.05 * Math.cos(Math.min(Math.abs(fromEye - 0.05) * 4.2, Math.PI)) - 0.04 * Math.max(fromEye, 0)
+    const arc = 0.3 + 0.05 * Math.cos(Math.min(Math.abs(fromEye - 0.05) * 4.2, Math.PI)) - 0.04 * Math.max(fromEye, 0)
     const thickness = 0.1 - 0.05 * Math.max(fromEye / 0.42, 0)
     if (Math.abs(fromEye) < 0.42 && nz > 0.3 && front > -0.1 && Math.abs(above - arc) < thickness) {
       regions[v] = Region.brows

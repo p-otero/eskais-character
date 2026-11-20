@@ -12,7 +12,8 @@
   "exports": {
     "./scan": "./src/scan/index.ts",
     "./motion": "./src/motion/index.ts",
-    "./react": "./src/react/index.ts"
+    "./react": "./src/react/index.ts",
+    "./three": "./src/three/index.ts"
   },
   "scripts": {
     "lint": "oxlint --deny-warnings && oxlint --type-aware --deny-warnings -c tooling/oxlint-type-aware.json src tooling test",
@@ -33,9 +34,10 @@
     "verify": "bun run lint && bun run format:check && bun run typecheck && bun run test && bun run guards && bun run deps:age && bun run test:browser && bun run perf:ci",
     "guard:images": "bun tooling/check-images.ts",
     "fetch:models": "node tooling/fetch-models.mjs",
-    "calibrate": "bun tooling/calibrate/face-landmarks.ts && bun tooling/calibrate/detect-set.ts --seed=2000 --count=32 && bun tooling/calibrate/body.ts --write && bun tooling/calibrate/detect-set.ts --seed=4000 --count=300 && bun tooling/calibrate/train-priors.ts --seed=4000",
+    "calibrate": "bun tooling/calibrate/face-landmarks.ts && bun tooling/calibrate/detect-set.ts --seed=2000 --count=32 && bun tooling/calibrate/body.ts --write && bun tooling/calibrate/detect-set.ts --seed=4000 --count=300 && bun tooling/calibrate/train-priors.ts --seed=4000 && bun tooling/calibrate/hair-thresholds.ts",
     "evaluate": "bun tooling/calibrate/detect-set.ts --seed=1 --count=24 && bun tooling/calibrate/eval-face.ts --seed=1 && bun tooling/calibrate/body.ts --seed=1 && bun tooling/calibrate/colors.ts --seed=4000",
-    "side-by-side": "bun tooling/calibrate/side-by-side.ts --count=4"
+    "side-by-side": "bun tooling/calibrate/side-by-side.ts --count=4",
+    "scan:photo": "bun tooling/local/scan-photo.ts"
   },
   "dependencies": {
     "@mediapipe/tasks-vision": "1.2.3"
@@ -60,10 +62,14 @@
     "vitest": "5.1.0"
   },
   "peerDependencies": {
-    "react": ">=19"
+    "react": ">=19",
+    "three": ">=0.180.0"
   },
   "peerDependenciesMeta": {
     "react": {
+      "optional": true
+    },
+    "three": {
       "optional": true
     }
   },

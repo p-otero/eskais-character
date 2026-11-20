@@ -22,6 +22,27 @@ export interface ScanHints {
 export interface ScanOptions {
   signal?: AbortSignal
   hints?: ScanHints
+  /** The look of the finished character; defaults to soft toon, stylize 0.5, casual outfit. */
+  look?: LookOptions
+}
+
+export type StyleId = "soft-toon" | "cel-outline" | "low-poly" | "clay"
+export type OutfitId = "casual" | "hoodie" | "none"
+
+export interface CharacterLook {
+  style: StyleId
+  /** 0 keeps the fitted proportions; 1 is the strongest stylisation (larger head and eyes, smaller nose and mouth). */
+  stylize: number
+  /** "none" shows the fitted body in underwear: meant for internal use, not for display. */
+  outfit: OutfitId
+}
+
+export type LookOptions = Partial<CharacterLook>
+
+export interface RestyleOptions extends LookOptions {
+  /** A hair style id from `character.hair.options`. */
+  hair?: string
+  colors?: Partial<CharacterColors>
 }
 
 export type ScanStage = "load" | "detect-face" | "detect-body" | "fit-body" | "fit-face" | "colors" | "hair" | "export"
@@ -58,6 +79,7 @@ export interface Character {
   params: CharacterParams
   colors: CharacterColors
   hair: HairChoice
+  look: CharacterLook & { styles: { id: StyleId; label: string }[]; outfits: OutfitId[] }
   quality: { face: number; body: number | null; warnings: string[] }
 }
 

@@ -34,6 +34,26 @@ live in the Eskais UI component library (`ModelViewer`, `ModelScan`), which cons
    people rendered by `tooling/synth` from Anny with known parameters. CI fails on any image the generator did not
    produce.
 
+## Try it on your own photo
+
+A local-only check with a real photo. Nothing is uploaded, saved or committed.
+
+```sh
+bun install
+bun run fetch:models    # once: the pinned MediaPipe models into .cache/models (SHA-256 checked)
+bun run scan:photo -- --face path/to/face.jpg --body path/to/body.jpg --height 175
+```
+
+- `--face` is required; `--body` (front, A-pose, fitted clothes), `--height` (cm) and `--stylize` (0–1) are optional.
+- The engine runs in headless Chrome on this machine with every network request outside the local files aborted;
+  the photo is read into memory and never copied or written.
+- Output goes to `.local/scans/<time>/`, which git ignores: a GLB and a front and side render per style, and
+  `character.json` (fitted parameters, colours, hair). Delete the folder when you're done.
+- The demo page (`bun run demo`) does the same in a browser tab with file inputs.
+
+Never add a real photo, or anything rendered from one, to the repository or to CI: the image guard rejects any image
+the synthetic generator did not produce.
+
 ## Status
 
 Spike. See [`docs/spike-report.md`](docs/spike-report.md).

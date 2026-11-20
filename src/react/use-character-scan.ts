@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useReducer, useRef } from "react"
 import type { ScanEngine } from "../scan/engine.ts"
 import { ScanError } from "../scan/errors.ts"
-import type { Character, ScanEvent, ScanInput, ScanOptions, ScanStage } from "../scan/types.ts"
+import type { Character, RestyleOptions, ScanEvent, ScanInput, ScanOptions, ScanStage } from "../scan/types.ts"
 
 export type ScanStatus = "idle" | "scanning" | "done" | "error" | "cancelled"
 
@@ -32,6 +32,7 @@ export const initialScanState: CharacterScanState = {
 
 type Action =
   | { type: "start" }
+  | { type: "restyled"; character: Character }
   | { type: "event"; event: ScanEvent }
   | { type: "error"; error: Error }
   | { type: "cancelled" }
@@ -41,6 +42,8 @@ export function reduceScan(state: CharacterScanState, action: Action): Character
   switch (action.type) {
     case "start":
       return { ...initialScanState, status: "scanning" }
+    case "restyled":
+      return { ...state, character: action.character, weights: action.character.weights }
     case "error":
       return { ...state, status: "error", error: action.error }
     case "cancelled":
@@ -75,6 +78,8 @@ export function reduceScan(state: CharacterScanState, action: Action): Character
 
 export interface CharacterScan extends CharacterScanState {
   start(input: ScanInput, options?: Omit<ScanOptions, "signal">): Promise<void>
+  /** Re-exports the finished character with another look, hair or colours; no-op before a character exists. */
+  restyle(options: RestyleOptions): Promise<void>
   cancel(): void
 }
 
@@ -107,5 +112,14 @@ export function useCharacterScan(engine: ScanEngine): CharacterScan {
   // A scan still running when the component unmounts is abandoned, so its worker stops sending events.
   useEffect(() => cancel, [cancel])
 
-  return { ...state, start, cancel }
+  const restyle = async (options: RestyleOptions) => {
+    if (!state.character) return
+    try {
+      dispatch({ type: "restyled", character: await engine.restyle(state.character, options) })
+    } catch (error) {
+      dispatch({ type: "error", error: error instanceof Error ? error : new Error("Restyling failed.") })
+    }
+  }
+
+  return { ...state, start, cancel, restyle }
 }

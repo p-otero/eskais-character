@@ -3,9 +3,11 @@
 
 import { createDetectors, type Detectors } from "./detect.ts"
 import { errorCode, errorMessage } from "./errors.ts"
+import { exportCharacter } from "./export.ts"
 import type { AssetUrls } from "./loader.ts"
 import type { WorkerRequest, WorkerResponse } from "./protocol.ts"
 import { measureBody } from "./measure-body.ts"
+import { loadHairAsset } from "./hair-asset.ts"
 import { loadModel, runScan } from "./pipeline.ts"
 
 interface WorkerScope {
@@ -30,7 +32,7 @@ scope.addEventListener("message", (message) => {
       urls = request.urls
       detectors = createDetectors({ urls, delegate: request.delegate, poseModel: request.poseModel })
       // Everything a scan needs is downloaded here, so the scan itself never touches the network.
-      Promise.all([detectors, loadModel(urls)]).then(
+      Promise.all([detectors, loadModel(urls), loadHairAsset(urls)]).then(
         ([ready]) => post({ type: "ready", delegate: ready.delegate, ms: performance.now() - started }),
         (error: unknown) => post({ type: "init-error", code: errorCode(error), message: errorMessage(error) }),
       )
@@ -59,6 +61,17 @@ scope.addEventListener("message", (message) => {
       })().catch((error: unknown) => {
         post({ type: "error", id: request.id, code: errorCode(error), message: errorMessage(error) })
       })
+      return
+    }
+    case "restyle": {
+      void loadModel(urls)
+        .then((model) => {
+          const character = exportCharacter(model, request.input)
+          post({ type: "restyled", id: request.id, character }, [character.glb.buffer])
+        })
+        .catch((error: unknown) => {
+          post({ type: "error", id: request.id, code: errorCode(error), message: errorMessage(error) })
+        })
       return
     }
     case "scan": {

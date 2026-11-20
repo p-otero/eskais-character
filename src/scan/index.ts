@@ -10,8 +10,12 @@ export type { Delegate } from "./detect.ts"
 export type {
   Character,
   CharacterColors,
+  CharacterLook,
   CharacterParams,
   HairChoice,
+  LookOptions,
+  OutfitId,
+  RestyleOptions,
   Hex,
   ScanErrorCode,
   ScanEvent,
@@ -19,8 +23,13 @@ export type {
   ScanInput,
   ScanOptions,
   ScanStage,
+  StyleId,
 } from "./types.ts"
 export { hairCatalogue } from "../model/hair.ts"
+export { stylePresets, styleIds } from "../model/style.ts"
+export type { StylePreset } from "../model/style.ts"
+export { outfitIds } from "../model/outfit.ts"
+export { defaultLook } from "./look.ts"
 export type { HairStyle, HairLength } from "../model/hair.ts"
 
 import type { ScanEngine, ScanEngineOptions } from "./engine.ts"

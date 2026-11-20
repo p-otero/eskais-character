@@ -7,5 +7,5 @@
     "outDir": ".tsbuild/runtime",
     "tsBuildInfoFile": ".tsbuild/runtime.tsbuildinfo"
   },
-  "include": ["src", "assets/anny/*.json"]
+  "include": ["src", "assets/anny/*.json", "assets/hair/*.json"]
 }

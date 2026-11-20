@@ -1,5 +1,7 @@
 # Spike report: photo → stylised, rigged character, in the browser
 
+> Follow-up: the art pass (styles, hair, outfit, restyle, demo assets) is in [art-pass-report.md](art-pass-report.md).
+
 Date: 2026-11-19. Branch `spike/scan`. Everything below was measured in this repo with the scripts named in
 "Reproduce"; the test people are synthetic (rendered from Anny with known parameters), never real photos.
 

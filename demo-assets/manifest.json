@@ -1,0 +1,79 @@
+{
+  "generator": "eskais-synth/1",
+  "seed": 1,
+  "count": 1,
+  "subjects": [
+    {
+      "id": "s001",
+      "phenotype": {
+        "gender": 0.9300943191861735,
+        "age": 0.6786846135463566,
+        "muscle": 0.39951996682211754,
+        "weight": 0.15583786428906024,
+        "height": 0.41111832328606396,
+        "proportions": 0.34189243058208374
+      },
+      "face": {
+        "head-scale-horiz": 0,
+        "head-scale-vert": 0.038,
+        "head-fat": 0.37,
+        "head-age": 0,
+        "head-angle": -0.403,
+        "forehead-scale-vert": 0.473,
+        "forehead-temple": -0.428,
+        "eyebrows-trans-up": 0,
+        "eyebrows-angle-up": -0.21,
+        "eye-scale": -0.43,
+        "eye-trans-up": -0.239,
+        "eye-trans-out": 0,
+        "eye-height2": 0,
+        "eye-corner1-up": 0.01,
+        "eye-epicanthus": -0.346,
+        "cheek-bones": 0,
+        "cheek-volume": 0.59,
+        "nose-scale-horiz": 0,
+        "nose-scale-vert": 0,
+        "nose-scale-depth": -0.38,
+        "nose-trans-up": 0.581,
+        "nose-point-width": 0.265,
+        "nose-nostrils-width": 0,
+        "mouth-scale-horiz": -0.299,
+        "mouth-scale-vert": 0,
+        "mouth-trans-up": 0,
+        "mouth-lowerlip-height": 0,
+        "mouth-upperlip-height": -0.484,
+        "chin-width": -0.11,
+        "chin-height": -0.255,
+        "chin-prominent": 0,
+        "chin-jaw-drop": 0.491
+      },
+      "colors": {
+        "skin": [91, 57, 40],
+        "eyes": [88, 57, 39],
+        "hair": [143, 66, 38],
+        "brows": [114, 53, 30],
+        "beard": null
+      },
+      "hair": "braid",
+      "light": {
+        "azimuth": -0.3401411708910018,
+        "elevation": 0.4818646122701466
+      },
+      "background": [151, 154, 207]
+    }
+  ],
+  "images": [
+    {
+      "file": "photo-face.png",
+      "kind": "face",
+      "subject": "s001",
+      "sha256": "eb9516738f98000bc8e5e676ae3688f075cf3f5da682320e9faa4ebea52a6186"
+    },
+    {
+      "file": "photo-body.png",
+      "kind": "body",
+      "subject": "s001",
+      "sha256": "af89896bf3a3811ab263c6d5d46681e5b6985f838f876769aad1e88413ed2ffe"
+    }
+  ]
+}

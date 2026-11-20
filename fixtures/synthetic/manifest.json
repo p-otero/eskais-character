@@ -70,7 +70,7 @@
         ],
         "beard": null
       },
-      "hair": "long",
+      "hair": "braid",
       "light": {
         "azimuth": 0.20439536729827523,
         "elevation": 0.41650287071242925
@@ -148,7 +148,7 @@
         ],
         "beard": null
       },
-      "hair": "long",
+      "hair": "braid",
       "light": {
         "azimuth": -0.3401411708910018,
         "elevation": 0.4818646122701466
@@ -226,7 +226,7 @@
         ],
         "beard": null
       },
-      "hair": "medium",
+      "hair": "fringe-bob",
       "light": {
         "azimuth": -0.2627083659172058,
         "elevation": 0.41220489302650093
@@ -304,7 +304,7 @@
         ],
         "beard": null
       },
-      "hair": "medium",
+      "hair": "long",
       "light": {
         "azimuth": 0.4726521179545671,
         "elevation": 0.42168274316936727
@@ -321,49 +321,49 @@
       "file": "s000-face.png",
       "kind": "face",
       "subject": "s000",
-      "sha256": "2730952c4ac91d0234dac99d02a027c502297a80153fa08d779746d5a9a1f3a2"
+      "sha256": "927ee04457bc72802c66597d408af557c45c2d5eb46cf3b1f1ea12e60688ae2c"
     },
     {
       "file": "s000-body.png",
       "kind": "body",
       "subject": "s000",
-      "sha256": "dff1562ad0bf586ca4125e341598fdbc63d57bac8fb74b9f6b2c01fa3bba27a9"
+      "sha256": "7e4beba09d4e1b69c10b4a8b31d2e19d070bfe23d71a30b66ea76ed0d7bd34e1"
     },
     {
       "file": "s001-face.png",
       "kind": "face",
       "subject": "s001",
-      "sha256": "d82a9d09da67421b3a70bc77c69438c014093debb1aa9e7f7fb94a9e31a724c1"
+      "sha256": "eb9516738f98000bc8e5e676ae3688f075cf3f5da682320e9faa4ebea52a6186"
     },
     {
       "file": "s001-body.png",
       "kind": "body",
       "subject": "s001",
-      "sha256": "636f4e601f8936e92660f988b8104b8cea77f08233c20c143b69df07d0b2d67e"
+      "sha256": "af89896bf3a3811ab263c6d5d46681e5b6985f838f876769aad1e88413ed2ffe"
     },
     {
       "file": "s002-face.png",
       "kind": "face",
       "subject": "s002",
-      "sha256": "5651360cab304733c152f2db69daff4f932a51f68df9cac492949ef2c65a3bdb"
+      "sha256": "c33e4e985b6b5c8c0154b5d18576bd3fc68a09e2bd37320e80d8c1261d30b6f7"
     },
     {
       "file": "s002-body.png",
       "kind": "body",
       "subject": "s002",
-      "sha256": "2b6704567e4858a8e7edcc22562ce119b76b48841e0f1579d6b52332fc9090ce"
+      "sha256": "712a19622e08c40e8866c8e9efd5ad95f920b3858fb7937fa779fabb74e16073"
     },
     {
       "file": "s003-face.png",
       "kind": "face",
       "subject": "s003",
-      "sha256": "ebf6830c7748fda0dabed8f6d315a912b744e9836e550960caf042ec2a57cbf4"
+      "sha256": "c65f85572c1d4d4acd71970f1e4337e57ca2cf781f08387419ee115e3840af14"
     },
     {
       "file": "s003-body.png",
       "kind": "body",
       "subject": "s003",
-      "sha256": "7e63e453bb18e988abbf162fbc46249e79695d9ac9248c0b09ce3ee1e473752e"
+      "sha256": "a8bde7decd2e5ec33e057d71f023203a17809530cdc31e32c145d226b153fbe1"
     }
   ]
 }

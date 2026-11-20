@@ -5,7 +5,8 @@ import type { Delegate } from "./detect.ts"
 import type { AssetUrls } from "./loader.ts"
 import type { ScanErrorCode } from "./errors.ts"
 import type { BodyFeatures } from "./measure-body.ts"
-import type { ScanEvent, ScanHints } from "./types.ts"
+import type { ExportInput } from "./export.ts"
+import type { Character, LookOptions, ScanEvent, ScanHints } from "./types.ts"
 
 export interface InitRequest {
   type: "init"
@@ -20,6 +21,13 @@ export interface ScanRequest {
   face: ImageBitmap
   body: ImageBitmap | null
   hints: ScanHints
+  look: LookOptions
+}
+
+export interface RestyleRequest {
+  type: "restyle"
+  id: number
+  input: ExportInput
 }
 
 export interface CancelRequest {
@@ -34,13 +42,14 @@ export interface DetectRequest {
   image: ImageBitmap
 }
 
-export type WorkerRequest = InitRequest | ScanRequest | CancelRequest | DetectRequest
+export type WorkerRequest = InitRequest | ScanRequest | CancelRequest | DetectRequest | RestyleRequest
 
 export type WorkerResponse =
   | { type: "ready"; delegate: Delegate; ms: number }
   | { type: "init-error"; code: ScanErrorCode; message: string }
   | { type: "event"; id: number; event: ScanEvent }
   | { type: "end"; id: number }
+  | { type: "restyled"; id: number; character: Character }
   | { type: "error"; id: number; code: ScanErrorCode; message: string }
   | {
       type: "detected"
