@@ -153,7 +153,7 @@ const events = recorded.events.map((event) => {
 writeFileSync(
   join(out, "scan-replay.json"),
   JSON.stringify({
-    note: "A recorded scan of a synthetic person (tooling/synth, CC0). Weights are aligned with targetNames and already multiplied by targetScales, so they apply to the GLBs here as they are.",
+    note: "A recorded scan of a synthetic person (tooling/synth, CC0). Weights are aligned with targetNames and already multiplied by targetScales, so they apply to the GLBs here as they are. Mask events carry their bytes base64-encoded in data (row-major, 0-255 person confidence).",
     subject: subjectId,
     targetNames: replayNames,
     targetScales: Array.from(replayScales),

@@ -6,8 +6,8 @@ library's `ModelScan` / `ModelViewer` docs. CC0 (see `LICENSE.md`). Regenerate w
 
 | File                               | What it is                                                                          |
 | ---------------------------------- | ----------------------------------------------------------------------------------- |
-| `character-soft-toon.glb`          | The scanned character, soft toon style, 988,628 bytes (529,718 gzip)                |
-| `character-cel-outline.glb`        | The same character, cel style with outline, 988,616 bytes                           |
+| `character-soft-toon.glb`          | The scanned character, soft toon style, 997,664 bytes (534,372 gzip)                |
+| `character-cel-outline.glb`        | The same character, cel style with outline, 997,652 bytes                           |
 | `photo-face.png`, `photo-body.png` | The synthetic photos the scan used                                                  |
 | `scan-replay.json`                 | The scan's event stream (landmarks, stages, progress weights, done) with timestamps |
 | `manifest.json`                    | Generator manifest of the photos (the repo's image guard re-renders them)           |
@@ -23,7 +23,9 @@ library's `ModelScan` / `ModelViewer` docs. CC0 (see `LICENSE.md`). Regenerate w
 - **Weights are scaled.** Each target is stored scaled to use the full byte range, so the weight to set is
   `weight × extras.targetScales[i]`. `mesh.weights` and every weight in `scan-replay.json` are already scaled. To
   drive an expression by its ARKit value `v`, set `morphTargetInfluences[i] = v * targetScales[i]`.
-- Animations: `idle` (3 s loop) and `wave` (2.4 s, right arm). 104-joint skeleton (Anny's rig), rest A-pose.
+- Animations: `idle` (3 s loop) and `wave` (2.7 s, right hand: raise to the side, three swings beside the head, back
+  to rest; it starts and ends at rest, so loop it or play it once and crossfade to `idle`). 104-joint skeleton (Anny's
+  rig), rest A-pose.
 - Materials carry the style in `extras.eskais` (`role`, `style` preset). `styleCharacter(scene)` from
   `eskais-character/three` builds the toon materials and outline; the plain glTF materials work too.
 
@@ -31,5 +33,6 @@ library's `ModelScan` / `ModelViewer` docs. CC0 (see `LICENSE.md`). Regenerate w
 
 `scan-replay.json` holds `{ subject, targetNames, targetScales, events }`. Events have `at` (ms from the start) and
 follow the engine's `ScanEvent` shapes: `stage`, `landmarks` (`points` as x, y pairs normalised to the photo,
-`aspect` the photo's width / height), `model` (`glb` names the file to load), `progress` (`value`, `weights` aligned
+`aspect` the photo's width / height), `mask` (`source`, `width`, `height`, and `data` as **base64** of the
+`width × height` bytes, row-major, 0–255 person confidence; decode to a `Uint8Array` to match the live event), `model` (`glb` names the file to load), `progress` (`value`, `weights` aligned
 with `targetNames`), and `done` (the character's params, colours, hair and final weights).
