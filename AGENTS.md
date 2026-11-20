@@ -135,6 +135,19 @@ in the commit. `bun run perf` is the full measurement behind the spike report (C
 Calibration trains on synthetic seeds 1000 (face map), 2000 (body calibration) and 4000 (priors, 300 people); seed 1
 is held out for evaluation. Never evaluate on a training seed.
 
+## Package and release
+
+- Published as `eskais-character` (ESM only). `bun run build` (tsdown) writes `dist/`: the public entries never import
+  MediaPipe, and `dist/worker.js` is self-contained so bundlers that only copy it still work. The package's own model
+  files ship under `assets/` and are resolved with `new URL(…, import.meta.url)` on the main thread.
+- `bun run check:package` runs publint and Are the Types Wrong; `bun run test:consumers` installs the packed package
+  into fresh Vite, Next.js (Turbopack and webpack) and bun apps and scans in Chrome. Both run in CI.
+- `src/version.ts` must equal `package.json`'s version (a test checks it): the CDN fallback for the package's own
+  assets is pinned to it.
+- Releases: bump the version in `package.json`, `src/version.ts` and `CHANGELOG.md`, merge to main, then push a
+  `v<version>` tag. `.github/workflows/publish.yml` publishes with npm trusted publishing (OIDC, provenance); there
+  is no npm token in the repository. Never publish, tag or release without the owner's go-ahead.
+
 ## Git
 
 Commit as the repository's configured author. The repository is private: don't make it public, publish to npm or

@@ -6,6 +6,60 @@ it. Nothing is processed in the cloud.
 The engine produces data only: a scan event stream, morph-target weights, colours, a hair choice and a GLB. Screens
 live in the Eskais UI component library (`ModelViewer`, `ModelScan`), which consumes that data.
 
+## Install
+
+```sh
+npm install eskais-character
+# optional peers: react (for eskais-character/react), three (for eskais-character/three)
+```
+
+ESM only, for browsers and Electron renderers (WebGL2 required).
+
+## Use
+
+```ts
+import { createScanEngine } from "eskais-character"
+
+const engine = createScanEngine() // starts the worker and loads the models
+const controller = new AbortController()
+
+for await (const event of engine.scan({ face: faceFile, body: bodyFile }, { signal: controller.signal })) {
+  if (event.type === "landmarks") drawPoints(event.points) // x, y pairs normalised to the photo
+  if (event.type === "model") viewer.load(event.glb) // once: the base character with every morph target
+  if (event.type === "progress") viewer.setWeights(event.weights) // live morphing while the fit converges
+  if (event.type === "done") viewer.load(event.character.glb)
+  if (event.type === "error") showError(event.error.code) // e.g. "no-face"
+}
+
+// Another look, without the photo:
+const clay = await engine.restyle(character, { style: "clay", stylize: 0.8, hair: "ponytail" })
+```
+
+With three.js, `styleCharacter(gltf.scene)` from `eskais-character/three` builds the style the GLB was exported with
+(toon ramp, rim light, outline). With React, `useCharacterScan(engine)` from `eskais-character/react` maps the events
+to state.
+
+### Bundlers and where the files come from
+
+| File                                                       | Size                                           | Where it comes from                                                                                 |
+| ---------------------------------------------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Scan worker (`dist/worker.js`, MediaPipe Tasks bundled in) | 0.46 MB (0.15 MB gzip)                         | Your bundler, from the package                                                                      |
+| Body model (`assets/anny/anny.bin`)                        | 5.2 MB (1.1 MB brotli)                         | Your bundler, from the package; fallback `cdn.jsdelivr.net/npm/eskais-character@<version>/assets/…` |
+| Hair styles (`assets/hair/hair.bin`)                       | 0.37 MB (0.19 MB brotli)                       | Same as the body model                                                                              |
+| MediaPipe WASM and loader                                  | 15 MB (2.9 MB brotli)                          | `cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.2.3/wasm/`                                          |
+| Face and pose models                                       | 3.8 + 9.4 MB (5.8 MB with `poseModel: "lite"`) | `storage.googleapis.com/mediapipe-models/…/float16/1/`                                              |
+
+Every file is checked against a pinned size and SHA-256 before use, wherever it comes from. To serve everything
+yourself, copy the files and pass `assetUrls` (same bytes, same hashes).
+
+- **Vite** (dev and build), **webpack** and **Next.js** (Turbopack): nothing to configure. The worker and the model
+  files are found through `new URL(…, import.meta.url)`, and the bundler emits them.
+- **bun build** doesn't emit those files: copy `node_modules/eskais-character/dist/worker.js` to your static files
+  and pass `createScanEngine({ workerUrl: "/worker.js" })`. The model files then come from the pinned CDN copy, or pass
+  `assetUrls` for your own copies.
+- A Content-Security-Policy needs `worker-src 'self' blob:`, `script-src 'self' 'wasm-unsafe-eval' blob:` and
+  `connect-src` for the hosts above (see `demo/index.html`).
+
 ## Scope
 
 - **Stylised, not realistic.** The face shape and body proportions are fitted to the person; skin, eye, hair, brow
