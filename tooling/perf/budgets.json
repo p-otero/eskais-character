@@ -12,8 +12,8 @@
   },
   "initMs": 4364,
   "longTasksOver50Ms": 0,
-  "memoryMiB": 71,
-  "glbBytes": 6181220,
+  "memoryMiB": 82,
+  "glbBytes": 6424757,
   "downloads": {
     "MediaPipe WASM loader": {
       "gzip": 85306,
@@ -39,9 +39,13 @@
       "gzip": 1804883,
       "brotli": 1129362
     },
+    "Hair styles": {
+      "gzip": 220754,
+      "brotli": 195686
+    },
     "Engine worker bundle": {
-      "gzip": 160365,
-      "brotli": 137135
+      "gzip": 159886,
+      "brotli": 135224
     }
   }
 }

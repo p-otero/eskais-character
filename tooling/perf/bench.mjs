@@ -26,6 +26,7 @@ export function downloadSizes(harnessDir = join(root, ".cache/harness")) {
     ["Pose Landmarker full model", join(root, ".cache/models/pose_landmarker_full.task")],
     ["Pose Landmarker lite model (alternative)", join(root, ".cache/models/pose_landmarker_lite.task")],
     ["Anny body model", join(root, "assets/anny/anny.bin")],
+    ["Hair styles", join(root, "assets/hair/hair.bin")],
   ]
   for (const file of readdirSync(join(harnessDir, "assets")))
     if (file.endsWith(".js"))

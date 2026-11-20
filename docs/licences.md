@@ -46,12 +46,12 @@ Pack downloads: [makehuman_system_assets_cc0.zip](https://files.makehumancommuni
 
 ## Made in this repository (art pass)
 
-| Component | Where | Licence | Note | Checked |
-| --- | --- | --- | --- | --- |
-| Default outfit (tee or hoodie, joggers, sneakers) | `src/model/outfit.ts` | MIT (repository) | Shells of the fitted body itself, no third-party mesh or texture | 2026-11-20 |
-| Style presets, toon eyes, stylisation | `src/model/style.ts`, `eyes.ts`, `stylize.ts` | MIT (repository) | Data and procedural geometry | 2026-11-20 |
-| Idle and wave clips | `src/model/clips.ts` | MIT (repository) | Procedural keys; no mocap used yet | 2026-11-20 |
-| Demo assets for the UI library | `demo-assets/` | CC0-1.0 | Synthetic person, CC0 Anny/MakeHuman data, CC0 hair, our outfit and clips; see `demo-assets/LICENSE.md` | 2026-11-20 |
+| Component                                         | Where                                         | Licence          | Note                                                                                                    | Checked    |
+| ------------------------------------------------- | --------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------- | ---------- |
+| Default outfit (tee or hoodie, joggers, sneakers) | `src/model/outfit.ts`                         | MIT (repository) | Shells of the fitted body itself, no third-party mesh or texture                                        | 2026-11-20 |
+| Style presets, toon eyes, stylisation             | `src/model/style.ts`, `eyes.ts`, `stylize.ts` | MIT (repository) | Data and procedural geometry                                                                            | 2026-11-20 |
+| Idle and wave clips                               | `src/model/clips.ts`                          | MIT (repository) | Procedural keys; no mocap used yet                                                                      | 2026-11-20 |
+| Demo assets for the UI library                    | `demo-assets/`                                | CC0-1.0          | Synthetic person, CC0 Anny/MakeHuman data, CC0 hair, our outfit and clips; see `demo-assets/LICENSE.md` | 2026-11-20 |
 
 ## Development only (not shipped)
 
