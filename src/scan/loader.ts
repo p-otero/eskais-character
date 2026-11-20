@@ -17,9 +17,40 @@ function hex(buffer: ArrayBuffer): string {
 
 export type AssetUrls = Partial<Record<AssetId, string>>
 
+/**
+ * Whether this code runs in a classic worker. Bundlers differ: Vite and webpack start `new Worker(…, { type: "module" })`
+ * as a module worker, Next's Turbopack as a classic one that loads chunks with importScripts. MediaPipe ships a loader
+ * for each. A module worker throws on importScripts, even with no arguments; a classic one does nothing.
+ */
+export function isClassicWorker(): boolean {
+  const scope = globalThis as { importScripts?: (...urls: string[]) => void }
+  if (typeof scope.importScripts !== "function") return false
+  try {
+    scope.importScripts()
+    return true
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Fetches a pinned asset from the host's copy when there is one, else from its pinned URL; when the host's copy can't
+ * be loaded at all (a bundler that didn't emit it), from the pinned URL. Either way the bytes must match the pin.
+ */
 export async function fetchPinned(id: AssetId, urls: AssetUrls, signal?: AbortSignal): Promise<ArrayBuffer> {
   const pinned = pinnedAssets[id]
-  const url = urls[id] ?? pinned.url
+  const own = urls[id]
+  if (own && own !== pinned.url)
+    try {
+      return await fetchFrom(id, own, signal)
+    } catch (error) {
+      if (!(error instanceof AssetLoadError)) throw error
+    }
+  return fetchFrom(id, pinned.url, signal)
+}
+
+async function fetchFrom(id: AssetId, url: string, signal?: AbortSignal): Promise<ArrayBuffer> {
+  const pinned = pinnedAssets[id]
   let response: Response
   try {
     response = await fetch(url, {

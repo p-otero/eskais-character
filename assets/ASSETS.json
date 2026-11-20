@@ -120,6 +120,26 @@
       "licenceNote": "@mediapipe/tasks-vision 1.2.3 (npm licence field Apache-2.0); same bytes as node_modules/@mediapipe/tasks-vision/wasm.",
       "package": true,
       "checked": "2026-11-19"
+    },
+    {
+      "name": "vision_wasm_internal.js",
+      "url": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.2.3/wasm/vision_wasm_internal.js",
+      "sha256": "2aa5fd3fdd3d8208cd7587df0bb19fb6925c4ea16a76dd025aedc1f64d6a6309",
+      "bytes": 336624,
+      "licence": "Apache-2.0",
+      "licenceNote": "@mediapipe/tasks-vision 1.2.3 (npm licence field Apache-2.0); the classic-worker loader and its WASM, same bytes as node_modules/@mediapipe/tasks-vision/wasm.",
+      "package": true,
+      "checked": "2026-11-20"
+    },
+    {
+      "name": "vision_wasm_internal.wasm",
+      "url": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.2.3/wasm/vision_wasm_internal.wasm",
+      "sha256": "225bc06c0f51a9cf31fea0e9e0b0243e9e01fb5ef332cc1a7fa6656dbdfdaabf",
+      "bytes": 14665716,
+      "licence": "Apache-2.0",
+      "licenceNote": "@mediapipe/tasks-vision 1.2.3 (npm licence field Apache-2.0); the classic-worker loader and its WASM, same bytes as node_modules/@mediapipe/tasks-vision/wasm.",
+      "package": true,
+      "checked": "2026-11-20"
     }
   ]
 }

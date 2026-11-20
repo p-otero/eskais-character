@@ -2,13 +2,14 @@
 // which stay in the worker. Only normalised landmark coordinates are ever posted to the UI.
 
 import { FaceLandmarker, PoseLandmarker } from "@mediapipe/tasks-vision"
+import { CapabilityError } from "./errors.ts"
 
 /** MediaPipe's WasmFileset, which the package declares but does not export. */
 interface WasmFileset {
   wasmLoaderPath: string
   wasmBinaryPath: string
 }
-import { fetchPinned, pinnedBlobUrl, type AssetUrls } from "./loader.ts"
+import { fetchPinned, isClassicWorker, pinnedBlobUrl, type AssetUrls } from "./loader.ts"
 
 export type Delegate = "CPU" | "GPU"
 
@@ -86,10 +87,6 @@ async function create(wasm: Wasm, urls: string[], face: Uint8Array, pose: Uint8A
   }
 }
 
-export class CapabilityError extends Error {
-  override name = "CapabilityError"
-}
-
 /**
  * MediaPipe Tasks for Web moves images through WebGL2 even on its CPU delegate (measured with tasks-vision 1.2.3), so
  * a browser without WebGL2 can't scan at all. Chrome falls back to SwiftShader when the GPU is blocklisted, so this is
@@ -122,48 +119,69 @@ export function softwareWebgl(): boolean {
 export async function createDetectors(options: DetectorOptions): Promise<Detectors> {
   if (!hasWebgl2()) throw new CapabilityError("Scanning needs WebGL2, which this browser does not provide.")
   const { urls, signal } = options
-  const [loader, binaryUrl, faceModel, poseModel] = await Promise.all([
-    fetchPinned("mediapipeLoader", urls, signal),
-    pinnedBlobUrl("mediapipeWasm", urls, "application/wasm", signal),
+  const [faceModel, poseModel] = await Promise.all([
     fetchPinned("faceLandmarker", urls, signal),
     fetchPinned(options.poseModel === "full" ? "poseLandmarkerFull" : "poseLandmarkerLite", urls, signal),
   ])
-  const wasm: Wasm = { loader, binaryUrl }
-  const blobUrls = [binaryUrl]
-  const revoke = () => {
-    for (const url of blobUrls) URL.revokeObjectURL(url)
-  }
   const order: Delegate[] =
     options.delegate === "auto" ? (softwareWebgl() ? ["CPU"] : ["GPU", "CPU"]) : [options.delegate]
+  // MediaPipe's module loader in a module worker, its classic loader in a classic one. Detection can be fooled when a
+  // bundler wraps importScripts (Turbopack does), so the other variant is the fallback when a loader fails to load.
+  const variants: LoaderVariant[] = isClassicWorker() ? ["classic", "module"] : ["module", "classic"]
   let lastError: unknown
-  for (const delegate of order) {
-    try {
-      // MediaPipe takes ownership of the buffers it is given, so each attempt gets its own copy. Attempts are
-      // sequential on purpose: the CPU delegate is only tried after the GPU one failed.
-      // oxlint-disable-next-line no-await-in-loop -- see above
-      const { faceLandmarker, poseLandmarker } = await create(
-        wasm,
-        blobUrls,
-        new Uint8Array(faceModel.slice(0)),
-        new Uint8Array(poseModel.slice(0)),
-        delegate,
-      )
-      return {
-        delegate,
-        detectFace: (image) => readFace(faceLandmarker, image),
-        detectBody: (image) => readBody(poseLandmarker, image),
-        close() {
-          faceLandmarker.close()
-          poseLandmarker.close()
-          revoke()
-        },
-      }
-    } catch (error) {
-      lastError = error
+  for (const variant of variants) {
+    // oxlint-disable-next-line no-await-in-loop -- the second variant is only fetched when the first can't load
+    const wasm = await loadWasm(variant, urls, signal)
+    const blobUrls = [wasm.binaryUrl]
+    const revoke = () => {
+      for (const url of blobUrls) URL.revokeObjectURL(url)
     }
+    for (const delegate of order) {
+      try {
+        // MediaPipe takes ownership of the buffers it is given, so each attempt gets its own copy. Attempts are
+        // sequential on purpose: the CPU delegate is only tried after the GPU one failed.
+        // oxlint-disable-next-line no-await-in-loop -- see above
+        const { faceLandmarker, poseLandmarker } = await create(
+          wasm,
+          blobUrls,
+          new Uint8Array(faceModel.slice(0)),
+          new Uint8Array(poseModel.slice(0)),
+          delegate,
+        )
+        return {
+          delegate,
+          detectFace: (image) => readFace(faceLandmarker, image),
+          detectBody: (image) => readBody(poseLandmarker, image),
+          close() {
+            faceLandmarker.close()
+            poseLandmarker.close()
+            revoke()
+          },
+        }
+      } catch (error) {
+        lastError = error
+        if (loaderFailed(error)) break
+      }
+    }
+    revoke()
   }
-  revoke()
   throw lastError instanceof Error ? lastError : new Error("MediaPipe could not start.")
+}
+
+type LoaderVariant = "module" | "classic"
+
+async function loadWasm(variant: LoaderVariant, urls: AssetUrls, signal?: AbortSignal): Promise<Wasm> {
+  const [loader, binaryUrl] = await Promise.all([
+    fetchPinned(variant === "classic" ? "mediapipeLoaderClassic" : "mediapipeLoader", urls, signal),
+    pinnedBlobUrl(variant === "classic" ? "mediapipeWasmClassic" : "mediapipeWasm", urls, "application/wasm", signal),
+  ])
+  return { loader, binaryUrl }
+}
+
+/** The loader script itself didn't run in this kind of worker (module syntax in a classic one, or the reverse). */
+function loaderFailed(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error)
+  return /import\.meta|outside a module|importScripts|ModuleFactory not set|Unexpected token 'export'/i.test(message)
 }
 
 function readFace(landmarker: FaceLandmarker, image: ImageBitmap): FaceDetection | null {
