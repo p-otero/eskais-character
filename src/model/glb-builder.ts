@@ -190,3 +190,88 @@ export function packGlb(json: Json, chunks: Uint8Array[], binLength: number): Ui
   }
   return out
 }
+
+export const BYTE = 5120
+
+/** Unit normals as normalized BYTE, padded to a 4-byte stride. */
+export function byteNormals(builder: GlbBuilder, data: Float32Array): number {
+  const count = data.length / 3
+  const padded = new Int8Array(count * 4)
+  for (let index = 0; index < count * 3; index++)
+    padded[Math.floor(index / 3) * 4 + (index % 3)] = Math.round(Math.min(Math.max(data[index] ?? 0, -1), 1) * 127)
+  return builder.accessor({
+    bufferView: builder.view(padded, ARRAY_BUFFER, 4),
+    componentType: BYTE,
+    normalized: true,
+    count,
+    type: "VEC3",
+  })
+}
+
+/**
+ * A morph target as normalized BYTE, scaled so its largest delta uses the full range: the stored delta is
+ * delta / scale, so a weight w must be sent as w × scale (`scale` is returned and goes into `extras.targetScales`).
+ * Vertices moving less than `epsilon` metres are dropped; the target is sparse when that leaves under a third of the
+ * vertices (5 bytes each), dense otherwise (4 bytes each, VEC3 padded for alignment).
+ */
+export function byteTarget(
+  builder: GlbBuilder,
+  vertexCount: number,
+  entries: { vertex: number; delta: [number, number, number] }[],
+  epsilon: number,
+): { accessor: number; scale: number } {
+  const moving = entries.filter(
+    ({ delta }) => Math.max(Math.abs(delta[0]), Math.abs(delta[1]), Math.abs(delta[2])) > epsilon,
+  )
+  let scale = 0
+  for (const { delta } of moving) scale = Math.max(scale, Math.abs(delta[0]), Math.abs(delta[1]), Math.abs(delta[2]))
+  if (scale === 0) scale = 1
+  const quantize = (value: number) => Math.round((value / scale) * 127)
+  if (moving.length * 3 > vertexCount) {
+    const padded = new Int8Array(vertexCount * 4)
+    const values = new Int8Array(vertexCount * 3)
+    for (const { vertex, delta } of moving)
+      for (let axis = 0; axis < 3; axis++) {
+        padded[vertex * 4 + axis] = quantize(delta[axis] ?? 0)
+        values[vertex * 3 + axis] = quantize(delta[axis] ?? 0)
+      }
+    const accessor = builder.accessor({
+      bufferView: builder.view(padded, ARRAY_BUFFER, 4),
+      componentType: BYTE,
+      normalized: true,
+      count: vertexCount,
+      type: "VEC3",
+      ...bounds(values, 3),
+    })
+    return { accessor, scale }
+  }
+  moving.sort((a, b) => a.vertex - b.vertex)
+  const indices = Uint16Array.from(moving, ({ vertex }) => vertex)
+  const values = new Int8Array(moving.length * 3)
+  moving.forEach(({ delta }, index) => {
+    for (let axis = 0; axis < 3; axis++) values[index * 3 + axis] = quantize(delta[axis] ?? 0)
+  })
+  const { min, max } = bounds(values, 3)
+  for (let axis = 0; axis < 3; axis++) {
+    min[axis] = Math.min(min[axis] ?? 0, 0)
+    max[axis] = Math.max(max[axis] ?? 0, 0)
+  }
+  const accessor = builder.accessor({
+    componentType: BYTE,
+    normalized: true,
+    count: vertexCount,
+    type: "VEC3",
+    min,
+    max,
+    ...(moving.length > 0
+      ? {
+          sparse: {
+            count: moving.length,
+            indices: { bufferView: builder.view(indices), componentType: UNSIGNED_SHORT },
+            values: { bufferView: builder.view(values) },
+          },
+        }
+      : {}),
+  })
+  return { accessor, scale }
+}
