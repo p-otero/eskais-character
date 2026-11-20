@@ -325,7 +325,7 @@ export function writeCharacterGlb(input: CharacterGlbInput): CharacterGlb {
   ]
 
   const animations = (input.clips ?? []).map((id) => {
-    const clip = buildClip(id)
+    const clip = buildClip(id, { boneLabels: model.boneLabels, bones: built.bones })
     const times = builder.accessor({
       bufferView: builder.view(new Float32Array(clip.times)),
       componentType: FLOAT,

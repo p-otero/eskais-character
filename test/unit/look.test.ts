@@ -92,13 +92,28 @@ describe("character", () => {
 })
 
 describe("clips", () => {
-  it("are unit quaternions, one per key", () => {
+  const model = loadAnny()
+  const { bones } = evaluateShape(model, { body: bodyCoefficients(model, neutralPhenotype) })
+  const rig = { boneLabels: model.boneLabels, bones }
+
+  it("are unit, sign-continuous quaternions, one per key", () => {
     for (const id of clipIds) {
-      const clip = buildClip(id)
+      const clip = buildClip(id, rig)
       for (const track of clip.tracks) {
         expect(track.rotations).toHaveLength(clip.times.length)
         for (const q of track.rotations) expect(Math.hypot(...q)).toBeCloseTo(1, 9)
+        // Neighbouring keys in one hemisphere: linear interpolation never takes the long way round.
+        const dots = track.rotations
+          .slice(1)
+          .map((q, index) => q.reduce((sum, value, k) => sum + value * (track.rotations[index]![k] ?? 0), 0))
+        expect(Math.min(...dots)).toBeGreaterThan(0.9)
       }
     }
+  })
+
+  it("the wave starts and ends at rest, so it loops and crossfades cleanly", () => {
+    const clip = buildClip("wave", rig)
+    for (const track of clip.tracks)
+      for (const q of [track.rotations[0]!, track.rotations.at(-1)!]) expect(Math.abs(q[3]!)).toBeCloseTo(1, 6)
   })
 })

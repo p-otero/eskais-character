@@ -8,6 +8,8 @@ import { buildCharacter } from "../../src/model/character.ts"
 import type { OutfitId } from "../../src/model/outfit.ts"
 import { stylePreset, type StyleId } from "../../src/model/style.ts"
 import { drawCharacter } from "./toon.ts"
+import { buildClip, type ClipId } from "../../src/model/clips.ts"
+import { poseCharacter, sampleClip } from "./pose.ts"
 import { loadHair } from "../../test/load-hair.ts"
 
 // The fitted hair styles come from the baked hair asset; node tooling registers it once.
@@ -278,7 +280,78 @@ export function renderImage(
   }
   if (what === "turntable") return renderTurntable(model, subject, look, turntableAngles, studioBackground)
   if (what === "portrait") return renderPortrait(model, subject, look, studioBackground)
+  if (what === "clip") {
+    const [, clipId, clipStyle, view] = kind.split(":") as [string, ClipId, StyleId, string]
+    const angle = view === "three-quarter" ? -Math.PI / 4 : 0
+    return renderClipStrip(
+      model,
+      subject,
+      { ...look, style: clipStyle },
+      clipId,
+      waveStripTimes,
+      angle,
+      [236, 238, 242],
+    )
+  }
   if (what !== "face" && what !== "body") throw new Error(`Unknown image kind "${kind}".`)
   const pair = subject.fitted ? renderComparison(model, subject, subject.fitted) : renderSubject(model, subject)
   return pair[what]
 }
+
+/** Frames of a clip on the stylised character, side by side; `angle` turns the camera around the character. */
+export function renderClipStrip(
+  model: AnnyModel,
+  subject: Subject,
+  look: LookOptions,
+  clipId: ClipId,
+  times: number[],
+  angle: number,
+  background: Rgb,
+): RenderedImage {
+  const character = characterFor(model, subject, look)
+  const clip = buildClip(clipId, { boneLabels: model.boneLabels, bones: character.bones })
+  const preset = stylePreset(look.style)
+  const back = srgbToLinear(background)
+  const head = model.boneLabels.indexOf("head")
+  const headY = character.bones[head * 3 + 1] ?? 0.9
+  // Waist up: the arm, the hand and the face.
+  const top = headY + 0.32
+  const bottom = headY - 0.75
+  const middle = (top + bottom) / 2
+  const distance = 3.2
+  const views = times.map((t) => {
+    const meshes = poseCharacter(model, character, sampleClip(model, clip, t))
+    const camera: Camera = {
+      eye: [Math.sin(angle) * distance, middle + 0.05, Math.cos(angle) * distance],
+      target: [0, middle, 0],
+      fovY: 2 * Math.atan(((top - bottom) * 0.58) / distance),
+      width: 360 * supersample,
+      height: 300 * supersample,
+    }
+    const frame = createFrame(
+      camera.width,
+      camera.height,
+      (_, v) => back.map((c) => c * (1.06 - 0.12 * v)) as [number, number, number],
+    )
+    const direction: [number, number, number] = [
+      Math.cos(angle) * studio.direction[0] + Math.sin(angle) * studio.direction[2],
+      studio.direction[1],
+      -Math.sin(angle) * studio.direction[0] + Math.cos(angle) * studio.direction[2],
+    ]
+    drawCharacter(frame, meshes, camera, { direction, ambient: studio.ambient }, preset)
+    return resolve(frame, supersample)
+  })
+  const width = views.reduce((sum, view) => sum + view.width, 0)
+  const height = views[0]?.height ?? 0
+  const rgba = new Uint8Array(width * height * 4)
+  let x0 = 0
+  for (const view of views) {
+    for (let y = 0; y < height; y++)
+      rgba.set(view.rgba.subarray(y * view.width * 4, (y + 1) * view.width * 4), (y * width + x0) * 4)
+    x0 += view.width
+  }
+  return { width, height, rgba }
+}
+
+// Rest, half raised, the swing peaks left and right, half lowered, rest.
+export const waveStripTimes = [0, 0.3, 0.675, 0.925, 1.175, 1.425, 1.675, 1.925, 2.35, 2.7]

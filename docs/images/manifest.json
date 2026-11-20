@@ -655,6 +655,18 @@
       "sha256": "913f3f8ae62af99949bb8a540889ac4bba6fbef6f2ff75d84d81016c3ffda216"
     },
     {
+      "file": "s000-fit-wave-front.png",
+      "kind": "clip:wave:soft-toon:front",
+      "subject": "s000-fit",
+      "sha256": "ac7f5d8b45f9ecc2e9f26da573680eccafa84038fa33b627129b8bb47995649c"
+    },
+    {
+      "file": "s000-fit-wave-three-quarter.png",
+      "kind": "clip:wave:soft-toon:three-quarter",
+      "subject": "s000-fit",
+      "sha256": "eb50d46f250ea66c42852dcb0bc1b0e916c180fb67e795dd7b8c2932bf999dcf"
+    },
+    {
       "file": "s001-face.png",
       "kind": "face",
       "subject": "s001",

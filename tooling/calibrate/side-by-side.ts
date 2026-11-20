@@ -122,6 +122,21 @@ for (const file of readdirSync(dir)
           sha256: createHash("sha256").update(bytes).digest("hex"),
         })
       }
+    // The wave clip, front and three-quarter, for the first person only.
+    if (styled === 1)
+      for (const view of ["front", "three-quarter"]) {
+        const kind = `clip:wave:soft-toon:${view}`
+        const image = renderImage(model, character, kind)
+        const bytes = encodePng(image.width, image.height, image.rgba, imageText(character, kind, 1))
+        const name = `${fitted.id}-wave-${view}.png`
+        writeFileSync(join(out, name), bytes)
+        images.push({
+          file: name,
+          kind,
+          subject: character.id,
+          sha256: createHash("sha256").update(bytes).digest("hex"),
+        })
+      }
   }
   console.log(`${data.subject.id}: hair ${data.subject.hair} → ${fitted.hair}`)
 }
