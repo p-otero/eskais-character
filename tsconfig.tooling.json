@@ -9,6 +9,11 @@
     "outDir": ".tsbuild/tooling",
     "tsBuildInfoFile": ".tsbuild/tooling.tsbuildinfo"
   },
-  "references": [{ "path": "./tsconfig.runtime.json" }],
-  "include": ["test", "tooling", "demo", "vitest.config.ts"]
+  "references": [
+    {
+      "path": "./tsconfig.runtime.json"
+    }
+  ],
+  "include": ["test", "tooling", "demo", "vitest.config.ts", "tsdown.config.ts"],
+  "exclude": ["tooling/package/consumers"]
 }

@@ -1,19 +1,81 @@
 {
   "name": "eskais-character",
-  "version": "0.0.0",
-  "private": true,
-  "description": "Local, in-browser engine that turns photos into a stylised, rigged character with a face.",
+  "version": "0.1.0",
+  "description": "Photos to a stylised, rigged 3D character with a face, entirely in the browser: MediaPipe landmarks, an Anny body fit, toon styles and a GLB with morph targets.",
+  "keywords": [
+    "3d",
+    "anny",
+    "avatar",
+    "body-scan",
+    "browser",
+    "character",
+    "face-landmarks",
+    "glb",
+    "gltf",
+    "makehuman",
+    "mediapipe",
+    "morph-targets",
+    "pose",
+    "privacy",
+    "toon",
+    "web-worker",
+    "webgl"
+  ],
+  "homepage": "https://github.com/p-otero/eskais-character#readme",
+  "bugs": {
+    "url": "https://github.com/p-otero/eskais-character/issues"
+  },
   "license": "MIT",
+  "author": "Pablo Otero",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/p-otero/eskais-character.git"
   },
+  "files": [
+    "dist",
+    "assets/anny/anny.bin",
+    "assets/hair/hair.bin",
+    "LICENSES.md",
+    "CHANGELOG.md"
+  ],
   "type": "module",
+  "sideEffects": [
+    "./dist/worker.js"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    "./scan": "./src/scan/index.ts",
-    "./motion": "./src/motion/index.ts",
-    "./react": "./src/react/index.ts",
-    "./three": "./src/three/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./scan": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "default": "./dist/react.js"
+    },
+    "./three": {
+      "types": "./dist/three.d.ts",
+      "default": "./dist/three.js"
+    },
+    "./motion": {
+      "types": "./dist/motion.d.ts",
+      "default": "./dist/motion.js"
+    },
+    "./worker": {
+      "types": "./dist/worker.d.ts",
+      "default": "./dist/worker.js"
+    },
+    "./assets/*": "./assets/*",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "scripts": {
     "lint": "oxlint --deny-warnings && oxlint --type-aware --deny-warnings -c tooling/oxlint-type-aware.json src tooling test",
@@ -31,18 +93,21 @@
     "perf": "bun tooling/perf/run.ts",
     "perf:ci": "bun tooling/perf/ci.ts",
     "glb:validate": "node tooling/validate-glb.mjs",
-    "verify": "bun run lint && bun run format:check && bun run typecheck && bun run test && bun run guards && bun run deps:age && bun run test:browser && bun run perf:ci",
+    "verify": "bun run lint && bun run format:check && bun run typecheck && bun run test && bun run check:package && bun run guards && bun run deps:age && bun run test:browser && bun run perf:ci",
     "guard:images": "bun tooling/check-images.ts",
     "fetch:models": "node tooling/fetch-models.mjs",
     "calibrate": "bun tooling/calibrate/face-landmarks.ts && bun tooling/calibrate/detect-set.ts --seed=2000 --count=32 && bun tooling/calibrate/body.ts --write && bun tooling/calibrate/detect-set.ts --seed=4000 --count=300 && bun tooling/calibrate/train-priors.ts --seed=4000 && bun tooling/calibrate/hair-thresholds.ts",
     "evaluate": "bun tooling/calibrate/detect-set.ts --seed=1 --count=24 && bun tooling/calibrate/eval-face.ts --seed=1 && bun tooling/calibrate/body.ts --seed=1 && bun tooling/calibrate/colors.ts --seed=4000",
     "side-by-side": "bun tooling/calibrate/side-by-side.ts --count=4",
-    "scan:photo": "bun tooling/local/scan-photo.ts"
-  },
-  "dependencies": {
-    "@mediapipe/tasks-vision": "1.2.3"
+    "scan:photo": "bun tooling/local/scan-photo.ts",
+    "build": "tsdown",
+    "prepack": "tsdown",
+    "check:package": "tsdown && publint --strict && attw --pack . --profile esm-only",
+    "test:consumers": "bun tooling/package/consumers.ts"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "0.18.5",
+    "@mediapipe/tasks-vision": "1.2.3",
     "@p-otero/oxlint-rules": "github:p-otero/oxlint-rules#835a22baa11bdd98e5e2d5818de71dc84e66849d",
     "@types/bun": "1.4.4",
     "@types/node": "26.6.6",
@@ -50,20 +115,23 @@
     "@types/three": "0.187.0",
     "fast-check": "4.10.2",
     "gltf-validator": "2.0.0-dev.3.10",
+    "magic-string": "1.4.5",
     "oxfmt": "0.78.0",
     "oxlint": "1.93.0",
     "oxlint-tsgolint": "7.0.2005",
     "playwright": "1.65.0",
+    "publint": "0.3.25",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "three": "0.187.0",
+    "tsdown": "0.23.7",
     "typescript": "7.0.2",
     "vite": "8.3.8",
     "vitest": "5.1.0"
   },
   "peerDependencies": {
-    "react": ">=19",
-    "three": ">=0.180.0"
+    "react": ">=18",
+    "three": ">=0.160.0"
   },
   "peerDependenciesMeta": {
     "react": {
@@ -72,6 +140,9 @@
     "three": {
       "optional": true
     }
+  },
+  "engines": {
+    "node": ">=20.19"
   },
   "packageManager": "bun@1.4.4"
 }

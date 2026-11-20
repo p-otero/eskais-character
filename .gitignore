@@ -1,6 +1,7 @@
 *.log
 .DS_Store
 .cache/
+.local/
 .synth/
 .tsbuild/
 .venv-bake/
@@ -9,4 +10,3 @@ dist/
 node_modules/
 test-results/
 tooling/perf/results/
-.local/
