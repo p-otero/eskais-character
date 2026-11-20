@@ -33,6 +33,44 @@
       "source": "this repository (generated)",
       "licence": "Apache-2.0",
       "checked": "2026-11-19"
+    },
+    {
+      "files": [
+        "assets/hair/hair.bin",
+        "assets/hair/hair.json"
+      ],
+      "description": "Hair catalogue: geometry derived from CC0 MakeHuman hair (short02, short03, afro01, bob02, long01, ponytail01, braid01 from the system assets; littleright_bobcut_hair from Hair 01), re-bound to Anny's head by tooling/bake/hair/bake_hair.py. No textures: transparent card areas were cut away and strand brightness kept as a per-vertex shade.",
+      "source": "https://static.makehumancommunity.org/assets/assetpacks/index.html",
+      "sources": [
+        {
+          "pack": "MakeHuman system assets",
+          "url": "https://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip",
+          "sha256": "b542127a8e25547c7c29c19f2d1d2adb9a664c80396ecd694095dbc8028a0107",
+          "bytes": 280737770,
+          "assets": [
+            "short02",
+            "short03",
+            "afro01",
+            "bob02",
+            "long01",
+            "ponytail01",
+            "braid01"
+          ],
+          "licenceProof": "Asset-pack page: 'System assets and materials for system assets, shared under CC0: MakeHuman system assets'; each .mhclo header: 'This asset was explicitly released as CC0 in september 2020.'"
+        },
+        {
+          "pack": "Hair 01",
+          "url": "https://files.makehumancommunity.org/asset_packs/hair01/hair01_cc0.zip",
+          "sha256": "49445d69848a313ec41a9970f6a0fe4bcf925c9f1c6ef40a76f119c2e07940c9",
+          "bytes": 227775853,
+          "assets": [
+            "littleright_bobcut_hair"
+          ],
+          "licenceProof": "https://static.makehumancommunity.org/assets/assetpacks/hair01.html lists littleright_bobcut_hair (author littleright) as CC0; packs/hair01.json in the zip: license CC0."
+        }
+      ],
+      "licence": "CC0-1.0",
+      "checked": "2026-11-20"
     }
   ],
   "remote": [

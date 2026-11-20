@@ -1,0 +1,571 @@
+{
+  "format": "eskais-hair/2",
+  "encoding": "offsets, triangles and anchorTriangles are delta-coded per column (16-bit wrap) and stored as byte planes (all low bytes, then all high bytes)",
+  "note": "CC0 MakeHuman hair fitted to Anny's head; geometry only, no textures (tooling/bake/hair/bake_hair.py).",
+  "sha256": "5f0fc166c7a13c949cd047701c493ff2d6db70d8a7a6cd4258e24a28e6997e22",
+  "byteLength": 370408,
+  "checked": "2026-11-20",
+  "scale": {
+    "x": [
+      5383,
+      11966,
+      0.148
+    ],
+    "y": [
+      791,
+      881,
+      0.23298000000000008
+    ],
+    "z": [
+      962,
+      5304,
+      0.19221
+    ]
+  },
+  "anchorFaces": {
+    "offset": 357304,
+    "dtype": "uint16",
+    "shape": [
+      2184,
+      3
+    ]
+  },
+  "packs": {
+    "hair01": {
+      "url": "https://files.makehumancommunity.org/asset_packs/hair01/hair01_cc0.zip",
+      "file": "hair01_cc0.zip",
+      "sha256": "49445d69848a313ec41a9970f6a0fe4bcf925c9f1c6ef40a76f119c2e07940c9",
+      "bytes": 227775853,
+      "name": "MakeHuman asset pack \"Hair 01\""
+    },
+    "system": {
+      "url": "https://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip",
+      "file": "makehuman_system_assets_cc0.zip",
+      "sha256": "b542127a8e25547c7c29c19f2d1d2adb9a664c80396ecd694095dbc8028a0107",
+      "bytes": 280737770,
+      "name": "MakeHuman system assets"
+    }
+  },
+  "styles": [
+    {
+      "id": "crop",
+      "label": "Short crop",
+      "length": "short",
+      "shape": "straight",
+      "licence": "CC0-1.0",
+      "source": {
+        "pack": "MakeHuman system assets",
+        "packUrl": "https://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip",
+        "asset": "short02",
+        "author": "MakeHuman team (Data Collection AB)",
+        "files": [
+          "hair/short02/short02.mhclo",
+          "hair/short02/short02.obj"
+        ],
+        "statement": "This asset was explicitly released as CC0 in september 2020. The license"
+      },
+      "offsetStep": 0.00025,
+      "vertexCount": 1346,
+      "triangleCount": 2532,
+      "bindingErrorMm": {
+        "mean": 0.53,
+        "p95": 2.03
+      },
+      "layout": {
+        "anchorTriangles": {
+          "offset": 0,
+          "dtype": "uint16",
+          "shape": [
+            1346
+          ]
+        },
+        "weights": {
+          "offset": 2692,
+          "dtype": "uint8",
+          "shape": [
+            1346,
+            2
+          ]
+        },
+        "offsets": {
+          "offset": 5384,
+          "dtype": "int16",
+          "shape": [
+            1346,
+            3
+          ]
+        },
+        "shade": {
+          "offset": 13460,
+          "dtype": "uint8",
+          "shape": [
+            1346
+          ]
+        },
+        "triangles": {
+          "offset": 14808,
+          "dtype": "uint16",
+          "shape": [
+            2532,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "id": "side-part",
+      "label": "Side part",
+      "length": "short",
+      "shape": "straight",
+      "licence": "CC0-1.0",
+      "source": {
+        "pack": "MakeHuman system assets",
+        "packUrl": "https://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip",
+        "asset": "short03",
+        "author": "MakeHuman team (Data Collection AB)",
+        "files": [
+          "hair/short03/short03.mhclo",
+          "hair/short03/short03.obj"
+        ],
+        "statement": "This asset was explicitly released as CC0 in september 2020. The license"
+      },
+      "offsetStep": 0.00025,
+      "vertexCount": 960,
+      "triangleCount": 1814,
+      "bindingErrorMm": {
+        "mean": 0.58,
+        "p95": 2.77
+      },
+      "layout": {
+        "anchorTriangles": {
+          "offset": 30000,
+          "dtype": "uint16",
+          "shape": [
+            960
+          ]
+        },
+        "weights": {
+          "offset": 31920,
+          "dtype": "uint8",
+          "shape": [
+            960,
+            2
+          ]
+        },
+        "offsets": {
+          "offset": 33840,
+          "dtype": "int16",
+          "shape": [
+            960,
+            3
+          ]
+        },
+        "shade": {
+          "offset": 39600,
+          "dtype": "uint8",
+          "shape": [
+            960
+          ]
+        },
+        "triangles": {
+          "offset": 40560,
+          "dtype": "uint16",
+          "shape": [
+            1814,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "id": "afro",
+      "label": "Short afro",
+      "length": "short",
+      "shape": "afro",
+      "licence": "CC0-1.0",
+      "source": {
+        "pack": "MakeHuman system assets",
+        "packUrl": "https://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip",
+        "asset": "afro01",
+        "author": "MakeHuman team (Data Collection AB)",
+        "files": [
+          "hair/afro01/afro01.mhclo",
+          "hair/afro01/afro01.obj"
+        ],
+        "statement": "This asset was explicitly released as CC0 in september 2020. The license"
+      },
+      "offsetStep": 0.00025,
+      "vertexCount": 2098,
+      "triangleCount": 1984,
+      "bindingErrorMm": {
+        "mean": 4.85,
+        "p95": 18.21
+      },
+      "layout": {
+        "anchorTriangles": {
+          "offset": 51444,
+          "dtype": "uint16",
+          "shape": [
+            2098
+          ]
+        },
+        "weights": {
+          "offset": 55640,
+          "dtype": "uint8",
+          "shape": [
+            2098,
+            2
+          ]
+        },
+        "offsets": {
+          "offset": 59836,
+          "dtype": "int16",
+          "shape": [
+            2098,
+            3
+          ]
+        },
+        "shade": {
+          "offset": 72424,
+          "dtype": "uint8",
+          "shape": [
+            2098
+          ]
+        },
+        "triangles": {
+          "offset": 74524,
+          "dtype": "uint16",
+          "shape": [
+            1984,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "id": "bob",
+      "label": "Bob",
+      "length": "medium",
+      "shape": "straight",
+      "licence": "CC0-1.0",
+      "source": {
+        "pack": "MakeHuman system assets",
+        "packUrl": "https://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip",
+        "asset": "bob02",
+        "author": "MakeHuman team (Data Collection AB)",
+        "files": [
+          "hair/bob02/bob02.mhclo",
+          "hair/bob02/bob02.obj"
+        ],
+        "statement": "This asset was explicitly released as CC0 in september 2020. The license"
+      },
+      "offsetStep": 0.00025,
+      "vertexCount": 1580,
+      "triangleCount": 2115,
+      "bindingErrorMm": {
+        "mean": 2.21,
+        "p95": 8.33
+      },
+      "layout": {
+        "anchorTriangles": {
+          "offset": 86428,
+          "dtype": "uint16",
+          "shape": [
+            1580
+          ]
+        },
+        "weights": {
+          "offset": 89588,
+          "dtype": "uint8",
+          "shape": [
+            1580,
+            2
+          ]
+        },
+        "offsets": {
+          "offset": 92748,
+          "dtype": "int16",
+          "shape": [
+            1580,
+            3
+          ]
+        },
+        "shade": {
+          "offset": 102228,
+          "dtype": "uint8",
+          "shape": [
+            1580
+          ]
+        },
+        "triangles": {
+          "offset": 103808,
+          "dtype": "uint16",
+          "shape": [
+            2115,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "id": "fringe-bob",
+      "label": "Bob with fringe",
+      "length": "medium",
+      "shape": "straight",
+      "licence": "CC0-1.0",
+      "source": {
+        "pack": "MakeHuman asset pack \"Hair 01\"",
+        "packUrl": "https://files.makehumancommunity.org/asset_packs/hair01/hair01_cc0.zip",
+        "asset": "littleright_bobcut_hair",
+        "author": "Littleright",
+        "files": [
+          "hair/littleright_bobcut_hair/littleright_bobcut_hair.mhclo",
+          "hair/littleright_bobcut_hair/littleright_hair_bobcut.obj"
+        ],
+        "statement": "listed as CC0 in the pack's metadata (packs/hair01.json)"
+      },
+      "offsetStep": 0.00025,
+      "vertexCount": 1895,
+      "triangleCount": 2678,
+      "bindingErrorMm": {
+        "mean": 1.67,
+        "p95": 10.43
+      },
+      "layout": {
+        "anchorTriangles": {
+          "offset": 116500,
+          "dtype": "uint16",
+          "shape": [
+            1895
+          ]
+        },
+        "weights": {
+          "offset": 120292,
+          "dtype": "uint8",
+          "shape": [
+            1895,
+            2
+          ]
+        },
+        "offsets": {
+          "offset": 124084,
+          "dtype": "int16",
+          "shape": [
+            1895,
+            3
+          ]
+        },
+        "shade": {
+          "offset": 135456,
+          "dtype": "uint8",
+          "shape": [
+            1895
+          ]
+        },
+        "triangles": {
+          "offset": 137352,
+          "dtype": "uint16",
+          "shape": [
+            2678,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "id": "long",
+      "label": "Long straight",
+      "length": "long",
+      "shape": "straight",
+      "licence": "CC0-1.0",
+      "source": {
+        "pack": "MakeHuman system assets",
+        "packUrl": "https://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip",
+        "asset": "long01",
+        "author": "MakeHuman team (Data Collection AB)",
+        "files": [
+          "hair/long01/long01.mhclo",
+          "hair/long01/long01.obj"
+        ],
+        "statement": "This asset was explicitly released as CC0 in september 2020. The license"
+      },
+      "offsetStep": 0.00025,
+      "vertexCount": 3049,
+      "triangleCount": 3818,
+      "bindingErrorMm": {
+        "mean": 25.87,
+        "p95": 63.46
+      },
+      "layout": {
+        "anchorTriangles": {
+          "offset": 153420,
+          "dtype": "uint16",
+          "shape": [
+            3049
+          ]
+        },
+        "weights": {
+          "offset": 159520,
+          "dtype": "uint8",
+          "shape": [
+            3049,
+            2
+          ]
+        },
+        "offsets": {
+          "offset": 165620,
+          "dtype": "int16",
+          "shape": [
+            3049,
+            3
+          ]
+        },
+        "shade": {
+          "offset": 183916,
+          "dtype": "uint8",
+          "shape": [
+            3049
+          ]
+        },
+        "triangles": {
+          "offset": 186968,
+          "dtype": "uint16",
+          "shape": [
+            3818,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "id": "ponytail",
+      "label": "Ponytail",
+      "length": "long",
+      "shape": "updo",
+      "licence": "CC0-1.0",
+      "source": {
+        "pack": "MakeHuman system assets",
+        "packUrl": "https://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip",
+        "asset": "ponytail01",
+        "author": "MakeHuman team (Data Collection AB)",
+        "files": [
+          "hair/ponytail01/ponytail01.mhclo",
+          "hair/ponytail01/ponytail01.obj"
+        ],
+        "statement": "This asset was explicitly released as CC0 in september 2020. The license"
+      },
+      "offsetStep": 0.00025,
+      "vertexCount": 3342,
+      "triangleCount": 4748,
+      "bindingErrorMm": {
+        "mean": 8.6,
+        "p95": 22.17
+      },
+      "layout": {
+        "anchorTriangles": {
+          "offset": 209876,
+          "dtype": "uint16",
+          "shape": [
+            3342
+          ]
+        },
+        "weights": {
+          "offset": 216560,
+          "dtype": "uint8",
+          "shape": [
+            3342,
+            2
+          ]
+        },
+        "offsets": {
+          "offset": 223244,
+          "dtype": "int16",
+          "shape": [
+            3342,
+            3
+          ]
+        },
+        "shade": {
+          "offset": 243296,
+          "dtype": "uint8",
+          "shape": [
+            3342
+          ]
+        },
+        "triangles": {
+          "offset": 246640,
+          "dtype": "uint16",
+          "shape": [
+            4748,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "id": "braid",
+      "label": "Braid",
+      "length": "long",
+      "shape": "braid",
+      "licence": "CC0-1.0",
+      "source": {
+        "pack": "MakeHuman system assets",
+        "packUrl": "https://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip",
+        "asset": "braid01",
+        "author": "MakeHuman team (Data Collection AB)",
+        "files": [
+          "hair/braid01/braid01.mhclo",
+          "hair/braid01/braid01.obj"
+        ],
+        "statement": "This asset was explicitly released as CC0 in september 2020. The license"
+      },
+      "offsetStep": 0.00025,
+      "vertexCount": 4485,
+      "triangleCount": 5472,
+      "bindingErrorMm": {
+        "mean": 22.53,
+        "p95": 48.11
+      },
+      "layout": {
+        "anchorTriangles": {
+          "offset": 275128,
+          "dtype": "uint16",
+          "shape": [
+            4485
+          ]
+        },
+        "weights": {
+          "offset": 284100,
+          "dtype": "uint8",
+          "shape": [
+            4485,
+            2
+          ]
+        },
+        "offsets": {
+          "offset": 293072,
+          "dtype": "int16",
+          "shape": [
+            4485,
+            3
+          ]
+        },
+        "shade": {
+          "offset": 319984,
+          "dtype": "uint8",
+          "shape": [
+            4485
+          ]
+        },
+        "triangles": {
+          "offset": 324472,
+          "dtype": "uint16",
+          "shape": [
+            5472,
+            3
+          ]
+        }
+      }
+    }
+  ]
+}

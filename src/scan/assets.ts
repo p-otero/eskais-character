@@ -16,6 +16,7 @@ export const assetIds = [
   "poseLandmarkerLite",
   "poseLandmarkerFull",
   "annyModel",
+  "hairModel",
 ] as const
 export type AssetId = (typeof assetIds)[number]
 
@@ -58,5 +59,11 @@ export const pinnedAssets: Record<AssetId, PinnedAsset> = {
     sha256: "d7dc924fdcc30dd9d77aa9edad14339d2cdfaa3426e87e052a7907a1e00f0cd8",
     bytes: 5_176_480,
     licence: "Apache-2.0 AND CC0-1.0",
+  },
+  hairModel: {
+    url: new URL("../../assets/hair/hair.bin", import.meta.url).href,
+    sha256: "5f0fc166c7a13c949cd047701c493ff2d6db70d8a7a6cd4258e24a28e6997e22",
+    bytes: 370_408,
+    licence: "CC0-1.0",
   },
 }
