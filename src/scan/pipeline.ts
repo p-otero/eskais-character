@@ -15,7 +15,11 @@ import {
   type Phenotype,
 } from "../model/anny.ts"
 import { morphTargetNames, morphWeights, writeCharacterGlb, type CharacterColors } from "../model/glb.ts"
-import { hairCatalogue, hairStyle } from "../model/hair.ts"
+import { hairStyle } from "../model/hair.ts"
+import { stylePresets } from "../model/style.ts"
+import { stylizeFace } from "../model/stylize.ts"
+import { exportCharacter } from "./export.ts"
+import { resolveLook } from "./look.ts"
 import { hex, sampleFaceColors, type FaceColors, type Rgb } from "./colors.ts"
 import type { Detectors } from "./detect.ts"
 import { ScanError } from "./errors.ts"
@@ -26,7 +30,7 @@ import { fetchPinned, type AssetUrls } from "./loader.ts"
 import { bodyFeatureNames, measureBody } from "./measure-body.ts"
 import { alignedFaceShape, predictLinear, type FacePrior, type LinearPrior } from "./priors.ts"
 import type { ScanRequest } from "./protocol.ts"
-import type { Character, ScanEvent, ScanStage } from "./types.ts"
+import type { ScanEvent, ScanStage } from "./types.ts"
 
 export interface ScanContext {
   emit(event: ScanEvent, transfer?: Transferable[]): void
@@ -94,6 +98,7 @@ export async function runScan(
     if (next) context.emit({ type: "stage", stage: next })
   }
   const warnings: string[] = []
+  const look = resolveLook(request.look)
 
   stage("detect-face")
   const face = detectors.detectFace(request.face)
@@ -132,12 +137,14 @@ export async function runScan(
     face: new Float32Array(model.faceModifierLabels.length),
     colors,
     hair: hairStyle("none"),
+    look: { style: stylePresets[look.style], stylize: look.stylize, outfit: look.outfit },
     mode: "base",
   })
   context.emit({ type: "model", glb: base.glb, targetNames }, [base.glb.buffer])
 
   let phenotype: Phenotype = neutralPhenotype
-  const emptyFace = new Float32Array(model.faceModifierLabels.length)
+  // Progress weights carry the look's face offsets, so the live morph already shows the stylised face.
+  const emptyFace = stylizeFace(model, new Float32Array(model.faceModifierLabels.length), look.stylize)
   const stature = request.hints.heightCm ? request.hints.heightCm / 100 : undefined
   let bodyQuality: number | null = null
   if (measured) {
@@ -182,7 +189,7 @@ export async function runScan(
     free: model.faceModifierLabels.map((_, index) => (facePrior.r2?.[index] ?? 0) >= 0.15),
     lambda: 2e-5,
     onIteration: (current, iteration, iterations) => {
-      const weights = morphWeights(model, body, current)
+      const weights = morphWeights(model, body, stylizeFace(model, current, look.stylize))
       context.emit({ type: "progress", value: 0.6 + (0.35 * (iteration + 1)) / iterations, weights }, [weights.buffer])
     },
   })
@@ -192,11 +199,7 @@ export async function runScan(
   const style = hairStyle(pickHair(sampled))
 
   stage("export")
-  const result = writeCharacterGlb({ model, body, face: faceFit.face, colors, hair: style, mode: "character" })
-  const character: Character = {
-    glb: result.glb,
-    targetNames: result.targetNames,
-    weights: result.weights,
+  const character = exportCharacter(model, {
     params: {
       phenotype,
       face: Object.fromEntries(model.faceModifierLabels.map((label, index) => [label, faceFit.face[index] ?? 0])),
@@ -208,14 +211,11 @@ export async function runScan(
       brows: hex(colors.brows),
       beard: colors.beard ? hex(colors.beard) : null,
     },
-    hair: {
-      id: style.id,
-      length: style.length,
-      options: hairCatalogue.map(({ id, label, length }) => ({ id, label, length })),
-    },
+    hairId: style.id,
+    look,
     quality: { face: Math.max(0, Math.min(1, 1 - faceFit.rmsMm / 8)), body: bodyQuality, warnings },
-  }
+  })
   stage(null)
-  context.emit({ type: "progress", value: 1, weights: result.weights.slice() })
-  context.emit({ type: "done", character }, [result.glb.buffer])
+  context.emit({ type: "progress", value: 1, weights: character.weights.slice() })
+  context.emit({ type: "done", character }, [character.glb.buffer])
 }

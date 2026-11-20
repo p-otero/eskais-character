@@ -5,7 +5,9 @@ import type { Delegate } from "./detect.ts"
 import { errorCode, errorMessage, ScanError } from "./errors.ts"
 import type { AssetUrls } from "./loader.ts"
 import type { WorkerRequest, WorkerResponse } from "./protocol.ts"
-import type { ScanEvent, ScanInput, ScanOptions } from "./types.ts"
+import type { ExportInput } from "./export.ts"
+import { resolveLook } from "./look.ts"
+import type { Character, RestyleOptions, ScanEvent, ScanInput, ScanOptions } from "./types.ts"
 
 export interface ScanEngineOptions {
   /** Where to load each pinned asset from, when the host serves its own copies (same bytes, same SHA-256). */
@@ -25,6 +27,11 @@ export interface ScanEngine {
    */
   ready: Promise<{ delegate: Delegate; ms: number }>
   scan(input: ScanInput, options?: ScanOptions): AsyncGenerator<ScanEvent, void, undefined>
+  /**
+   * Re-exports a scanned character with another style, stylisation, outfit, hair or colours, without the photo:
+   * everything it needs is in the Character. Rejects with a ScanError.
+   */
+  restyle(character: Character, options: RestyleOptions): Promise<Character>
   /** Test hook: landmarks of one image, without a scan. */
   detect(kind: "face" | "body", image: Blob | ImageBitmap): Promise<Extract<WorkerResponse, { type: "detected" }>>
   dispose(): void
@@ -100,7 +107,10 @@ export function createScanEngine(options: ScanEngineOptions = {}): ScanEngine {
         yield { type: "error", error: { code: "unreadable-image", message: "A photo could not be decoded." } }
         return
       }
-      send({ type: "scan", id, face, body, hints: scanOptions.hints ?? {} }, body ? [face, body] : [face])
+      send(
+        { type: "scan", id, face, body, hints: scanOptions.hints ?? {}, look: scanOptions.look ?? {} },
+        body ? [face, body] : [face],
+      )
       for (;;) {
         while (queue.length === 0) {
           signal?.throwIfAborted()
@@ -130,6 +140,25 @@ export function createScanEngine(options: ScanEngineOptions = {}): ScanEngine {
   return {
     ready,
     scan,
+    async restyle(character, changes) {
+      await ready
+      const id = nextId++
+      const input: ExportInput = {
+        params: character.params,
+        colors: { ...character.colors, ...changes.colors },
+        hairId: changes.hair ?? character.hair.id,
+        look: resolveLook(changes, character.look),
+        quality: character.quality,
+      }
+      return new Promise((resolve, reject) => {
+        listeners.set(id, (message) => {
+          listeners.delete(id)
+          if (message.type === "restyled") resolve(message.character)
+          else if (message.type === "error") reject(new ScanError(message.code, message.message))
+        })
+        send({ type: "restyle", id, input })
+      })
+    },
     async detect(kind, image) {
       await ready
       const id = nextId++
