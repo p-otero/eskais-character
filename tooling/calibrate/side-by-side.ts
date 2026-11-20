@@ -18,10 +18,14 @@ import { alignedFaceShape, predictLinear, type FacePrior, type LinearPrior } fro
 import { loadAnny } from "../../test/load-anny.ts"
 import { imageText, type ManifestImage, type SynthManifest } from "../synth/generate.ts"
 import { decodePng, encodePng } from "../synth/png.ts"
-import { renderComparison } from "../synth/render.ts"
+import { renderComparison, renderImage } from "../synth/render.ts"
+import { styleIds } from "../../src/model/style.ts"
 import { generatorVersion, type Subject } from "../synth/subjects.ts"
 
 const count = Number(process.argv.find((a) => a.startsWith("--count="))?.slice(8) ?? "4")
+// How many subjects also get the per-style turntables and portraits (the report shows two).
+const styleSubjects = 2
+let styled = 0
 const dir = ".cache/detections/seed-1"
 const out = "docs/images"
 const model = loadAnny()
@@ -98,6 +102,26 @@ for (const file of readdirSync(dir)
       subject: data.subject.id,
       sha256: createHash("sha256").update(bytes).digest("hex"),
     })
+  }
+  if (styled < styleSubjects) {
+    styled++
+    // The fitted character in every style: a turntable strip and a portrait, under its own subject entry.
+    const character = { ...fitted, look: { stylize: 0.5, outfit: "casual" as const } }
+    subjects.push(character as never)
+    for (const style of styleIds)
+      for (const what of ["turntable", "portrait"] as const) {
+        const kind = `${what}:${style}`
+        const image = renderImage(model, character, kind)
+        const bytes = encodePng(image.width, image.height, image.rgba, imageText(character, kind, 1))
+        const name = `${fitted.id}-${what}-${style}.png`
+        writeFileSync(join(out, name), bytes)
+        images.push({
+          file: name,
+          kind,
+          subject: character.id,
+          sha256: createHash("sha256").update(bytes).digest("hex"),
+        })
+      }
   }
   console.log(`${data.subject.id}: hair ${data.subject.hair} → ${fitted.hair}`)
 }

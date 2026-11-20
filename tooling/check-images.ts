@@ -34,7 +34,7 @@ function sha256(bytes: Uint8Array): string {
 interface Listed {
   manifestPath: string
   manifest: SynthManifest
-  kind: "face" | "body"
+  kind: string
   subject: string
   sha256: string
 }
@@ -97,7 +97,7 @@ export function comparePixels(a: Uint8Array, b: Uint8Array): { share: number; ma
 
 async function rerender(listed: Map<string, Listed>, problems: string[]): Promise<number> {
   const { loadAnny } = await import("../test/load-anny.ts")
-  const { renderComparison, renderSubject } = await import("./synth/render.ts")
+  const { renderImage } = await import("./synth/render.ts")
   const model = loadAnny()
   const bySubject = new Map<string, { entry: Listed; paths: Map<string, string> }>()
   for (const [path, entry] of listed) {
@@ -112,13 +112,10 @@ async function rerender(listed: Map<string, Listed>, problems: string[]): Promis
       problems.push(`${entry.manifestPath}: lists images of ${entry.subject} but not its parameters`)
       continue
     }
-    // A comparison subject carries the scan's fitted parameters: its images are truth and fit side by side.
-    const fitted = (subject as typeof subject & { fitted?: typeof subject }).fitted
-    const rendered = fitted ? renderComparison(model, subject, fitted) : renderSubject(model, subject)
     for (const [kind, path] of paths) {
       if (!existsSync(join(root, path))) continue
       const decoded = decodePng(readFileSync(join(root, path)))
-      const image = rendered[kind as "face" | "body"]
+      const image = renderImage(model, subject, kind)
       const { share, maxDiff } = comparePixels(decoded.rgba, image.rgba)
       if (
         decoded.width !== image.width ||

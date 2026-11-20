@@ -10,7 +10,7 @@ import { generatorVersion, makeSubjects, type Subject } from "./subjects.ts"
 
 export interface ManifestImage {
   file: string
-  kind: "face" | "body"
+  kind: string
   subject: string
   sha256: string
 }
@@ -23,7 +23,7 @@ export interface SynthManifest {
   images: ManifestImage[]
 }
 
-export function imageText(subject: Subject, kind: "face" | "body", seed: number): Record<string, string> {
+export function imageText(subject: Subject, kind: string, seed: number): Record<string, string> {
   return { Software: generatorVersion, "eskais-synthetic": JSON.stringify({ seed, subject: subject.id, kind }) }
 }
 

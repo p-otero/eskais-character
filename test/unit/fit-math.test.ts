@@ -158,8 +158,8 @@ describe("colours", () => {
     const base = { hair: [40, 30, 20] as Rgb, hairShape: { coverage: 0.8, crown: 0.5, fall: 0 } }
     expect(pickHair({ ...base, hair: null })).toBe("none")
     expect(pickHair(base)).toBe("buzz")
-    expect(pickHair({ ...base, hairShape: { ...base.hairShape, fall: 0.15 } })).toBe("short")
-    expect(pickHair({ ...base, hairShape: { ...base.hairShape, fall: 1 } })).toBe("medium")
+    expect(pickHair({ ...base, hairShape: { ...base.hairShape, fall: 0.15 } })).toBe("crop")
+    expect(pickHair({ ...base, hairShape: { ...base.hairShape, fall: 0.5 } })).toBe("fringe-bob")
     expect(pickHair({ ...base, hairShape: { ...base.hairShape, fall: 1.6 } })).toBe("long")
   })
 })

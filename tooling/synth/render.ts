@@ -4,6 +4,14 @@ import { buildHair, hairStyle } from "../../src/model/hair.ts"
 import { headFrame, meshParts, paintRegions, Region } from "../../src/model/regions.ts"
 import { createFrame, drawMesh, resolve, vertexNormals, type Camera, type Light } from "./raster.ts"
 import type { Rgb, Subject } from "./subjects.ts"
+import { buildCharacter } from "../../src/model/character.ts"
+import type { OutfitId } from "../../src/model/outfit.ts"
+import { stylePreset, type StyleId } from "../../src/model/style.ts"
+import { drawCharacter } from "./toon.ts"
+import { loadHair } from "../../test/load-hair.ts"
+
+// The fitted hair styles come from the baked hair asset; node tooling registers it once.
+loadHair()
 
 export function srgbToLinear(color: Rgb): [number, number, number] {
   return color.map((channel) => {
@@ -62,7 +70,7 @@ export function prepareSubject(model: AnnyModel, subject: Subject) {
       kept.push(model.faces[t] ?? 0, model.faces[t + 1] ?? 0, model.faces[t + 2] ?? 0)
   const bodyIndices = new Uint16Array(kept)
   const eyes = eyeballs(frame, srgbToLinear(subject.colors.eyes))
-  const hairMesh = buildHair(style, vertices, normals, model.faces, regions, frame)
+  const hairMesh = buildHair(style, vertices, normals, model.faces, regions, frame, { doubleSided: true })
   const hairColors = new Float32Array(hairMesh.positions.length)
   for (let v = 0; v < hairColors.length; v += 3) hairColors.set(hair, v)
   const elevation = subject.light.elevation
@@ -142,4 +150,135 @@ export function renderComparison(
     return { width, height: a.height, rgba }
   }
   return { face: join(left.face, right.face), body: join(left.body, right.body) }
+}
+
+export interface LookOptions {
+  style: StyleId
+  stylize: number
+  outfit: OutfitId
+}
+
+/** The stylised character for a subject's parameters (truth or fitted). */
+export function characterFor(model: AnnyModel, subject: Subject, look: LookOptions) {
+  return buildCharacter({
+    model,
+    body: bodyCoefficients(model, subject.phenotype),
+    face: model.faceModifierLabels.map((label) => subject.face[label] ?? 0),
+    colors: {
+      skin: subject.colors.skin,
+      eyes: subject.colors.eyes,
+      hair: subject.colors.hair,
+      brows: subject.colors.brows,
+      beard: subject.colors.beard,
+    },
+    hair: hairStyle(subject.hair),
+    look: { style: stylePreset(look.style), stylize: look.stylize, outfit: look.outfit },
+    mode: "character",
+  })
+}
+
+const studio = { direction: [0.45, 0.65, 0.85] as [number, number, number], ambient: 0.18 }
+
+/** One full-body view per angle (radians around the vertical axis), side by side: a turntable strip. */
+export function renderTurntable(
+  model: AnnyModel,
+  subject: Subject,
+  look: LookOptions,
+  angles: number[],
+  background: Rgb,
+): RenderedImage {
+  const character = characterFor(model, subject, look)
+  const preset = stylePreset(look.style)
+  let top = Number.NEGATIVE_INFINITY
+  let bottom = Number.POSITIVE_INFINITY
+  for (const mesh of character.meshes)
+    for (let v = 1; v < mesh.positions.length; v += 3) {
+      top = Math.max(top, mesh.positions[v] ?? 0)
+      bottom = Math.min(bottom, mesh.positions[v] ?? 0)
+    }
+  const middle = (top + bottom) / 2
+  const distance = 4.2
+  const back = srgbToLinear(background)
+  const views = angles.map((angle) => {
+    const camera: Camera = {
+      eye: [Math.sin(angle) * distance, middle + 0.1, Math.cos(angle) * distance],
+      target: [0, middle, 0],
+      fovY: 2 * Math.atan(((top - bottom) * 0.56) / distance),
+      width: 300 * supersample,
+      height: 600 * supersample,
+    }
+    const frame = createFrame(
+      camera.width,
+      camera.height,
+      (_, v) => back.map((c) => c * (1.08 - 0.2 * v)) as [number, number, number],
+    )
+    // The light turns with the camera, so every view is lit from the viewer's upper left.
+    const direction: [number, number, number] = [
+      Math.cos(angle) * studio.direction[0] + Math.sin(angle) * studio.direction[2],
+      studio.direction[1],
+      -Math.sin(angle) * studio.direction[0] + Math.cos(angle) * studio.direction[2],
+    ]
+    drawCharacter(frame, character.meshes, camera, { direction, ambient: studio.ambient }, preset)
+    return resolve(frame, supersample)
+  })
+  const width = views.reduce((sum, view) => sum + view.width, 0)
+  const height = views[0]?.height ?? 0
+  const rgba = new Uint8Array(width * height * 4)
+  let x0 = 0
+  for (const view of views) {
+    for (let y = 0; y < height; y++)
+      rgba.set(view.rgba.subarray(y * view.width * 4, (y + 1) * view.width * 4), (y * width + x0) * 4)
+    x0 += view.width
+  }
+  return { width, height, rgba }
+}
+
+/** A face close-up of the stylised character, front on. */
+export function renderPortrait(model: AnnyModel, subject: Subject, look: LookOptions, background: Rgb): RenderedImage {
+  const character = characterFor(model, subject, look)
+  const head = model.boneLabels.indexOf("head")
+  const hx = character.bones[head * 3] ?? 0
+  const hy = (character.bones[head * 3 + 1] ?? 0) + 0.07
+  const hz = character.bones[head * 3 + 2] ?? 0
+  const camera: Camera = {
+    eye: [hx, hy, hz + 0.75],
+    target: [hx, hy, hz],
+    fovY: 0.5,
+    width: 480 * supersample,
+    height: 480 * supersample,
+  }
+  const back = srgbToLinear(background)
+  const frame = createFrame(
+    camera.width,
+    camera.height,
+    (_, v) => back.map((c) => c * (1.08 - 0.2 * v)) as [number, number, number],
+  )
+  drawCharacter(frame, character.meshes, camera, studio, stylePreset(look.style))
+  return resolve(frame, supersample)
+}
+
+export const turntableAngles = [0, Math.PI / 4, Math.PI / 2, Math.PI]
+const studioBackground: Rgb = [214, 220, 228]
+
+/**
+ * Every image kind the generator writes: "face" and "body" photos (or truth-vs-fit comparisons when the subject
+ * carries `fitted`), and "turntable:<style>" / "portrait:<style>" of the stylised character. The image guard re-renders
+ * through this.
+ */
+export function renderImage(
+  model: AnnyModel,
+  subject: Subject & { fitted?: Subject; look?: Partial<LookOptions> },
+  kind: string,
+): RenderedImage {
+  const [what, style] = kind.split(":") as [string, StyleId | undefined]
+  const look: LookOptions = {
+    style: style ?? "soft-toon",
+    stylize: subject.look?.stylize ?? 0.5,
+    outfit: subject.look?.outfit ?? "casual",
+  }
+  if (what === "turntable") return renderTurntable(model, subject, look, turntableAngles, studioBackground)
+  if (what === "portrait") return renderPortrait(model, subject, look, studioBackground)
+  if (what !== "face" && what !== "body") throw new Error(`Unknown image kind "${kind}".`)
+  const pair = subject.fitted ? renderComparison(model, subject, subject.fitted) : renderSubject(model, subject)
+  return pair[what]
 }

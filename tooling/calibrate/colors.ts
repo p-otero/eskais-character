@@ -2,7 +2,8 @@
 import { readdirSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import { deltaE, sampleFaceColors, type Rgb } from "../../src/scan/colors.ts"
-import { pickHair } from "../../src/scan/hair-pick.ts"
+import { hairStyle } from "../../src/model/hair.ts"
+import { pickHairLength } from "../../src/scan/hair-pick.ts"
 import { decodePng } from "../synth/png.ts"
 import type { Subject } from "../synth/subjects.ts"
 
@@ -61,5 +62,5 @@ for (const [style, list] of byStyle)
   console.log(
     `${style.padEnd(7)} coverage ${list.map((x) => x[0]!.toFixed(2)).join(" ")} | crown ${list.map((x) => x[1]!.toFixed(2)).join(" ")} | fall ${list.map((x) => x[2]!.toFixed(2)).join(" ")}`,
   )
-const correct = rows.filter(({ subject, colors }) => pickHair(colors) === subject.hair).length
+const correct = rows.filter(({ subject, colors }) => pickHairLength(colors) === hairStyle(subject.hair).length).length
 console.log(`hair style accuracy ${String(correct)}/${String(rows.length)}`)
