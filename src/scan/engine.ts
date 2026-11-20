@@ -1,6 +1,7 @@
 // Main-thread side: owns the worker and turns its messages into an async event stream. Nothing heavy runs here, so a
 // scan never blocks the UI thread.
 
+import { bundledAssetUrls } from "./asset-urls.ts"
 import type { Delegate } from "./detect.ts"
 import { errorCode, errorMessage, ScanError } from "./errors.ts"
 import type { AssetUrls } from "./loader.ts"
@@ -16,7 +17,12 @@ export interface ScanEngineOptions {
   delegate?: Delegate | "auto"
   /** Pose model: "lite" (5.8 MB) or "full" (9.4 MB, more accurate). */
   poseModel?: "lite" | "full"
-  /** Creates the worker; the default bundles src/scan/worker.ts. */
+  /**
+   * Where the worker script is served, for bundlers that don't emit `new Worker(new URL(…, import.meta.url))` targets
+   * (bun's): copy `eskais-character/worker` (dist/worker.js) to your static files and point here. Same origin only.
+   */
+  workerUrl?: string | URL
+  /** Creates the worker yourself; overrides `workerUrl`. */
   createWorker?: () => Worker
 }
 
@@ -51,7 +57,11 @@ async function toBitmap(source: Blob | ImageBitmap): Promise<ImageBitmap> {
 }
 
 export function createScanEngine(options: ScanEngineOptions = {}): ScanEngine {
-  const worker = (options.createWorker ?? defaultWorker)()
+  const worker = options.createWorker
+    ? options.createWorker()
+    : options.workerUrl
+      ? new Worker(options.workerUrl, { type: "module", name: "eskais-character-scan" })
+      : defaultWorker()
   let nextId = 1
   const listeners = new Map<number, (message: WorkerResponse) => void>()
   const {
@@ -74,7 +84,7 @@ export function createScanEngine(options: ScanEngineOptions = {}): ScanEngine {
   const send = (request: WorkerRequest, transfer: Transferable[] = []) => worker.postMessage(request, transfer)
   send({
     type: "init",
-    urls: options.assetUrls ?? {},
+    urls: { ...bundledAssetUrls(), ...options.assetUrls },
     delegate: options.delegate ?? "auto",
     poseModel: options.poseModel ?? "full",
   })

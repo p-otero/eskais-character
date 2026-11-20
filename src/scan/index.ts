@@ -5,7 +5,7 @@ export type { ScanEngine, ScanEngineOptions } from "./engine.ts"
 export { AssetIntegrityError, AssetLoadError } from "./loader.ts"
 export { ScanError, scanErrorCodes } from "./errors.ts"
 export type { AssetUrls } from "./loader.ts"
-export { CapabilityError } from "./detect.ts"
+export { CapabilityError } from "./errors.ts"
 export type { Delegate } from "./detect.ts"
 export type {
   Character,

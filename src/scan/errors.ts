@@ -1,7 +1,6 @@
 // Scan failures as stable codes, so the UI can react without parsing messages. Classes don't survive postMessage, so
 // the worker sends the code and the main thread rebuilds a ScanError.
 
-import { CapabilityError } from "./detect.ts"
 import { AssetIntegrityError, AssetLoadError } from "./loader.ts"
 
 export const scanErrorCodes = [
@@ -20,6 +19,11 @@ export const scanErrorCodes = [
   "internal",
 ] as const
 export type ScanErrorCode = (typeof scanErrorCodes)[number]
+
+/** The browser lacks something the engine needs (WebGL2 today). */
+export class CapabilityError extends Error {
+  override name = "CapabilityError"
+}
 
 export class ScanError extends Error {
   override name = "ScanError"

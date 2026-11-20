@@ -183,9 +183,8 @@ describe("reduceScan", () => {
 
 describe("scan errors", () => {
   it("maps failures to stable codes and ends the hook state in error", async () => {
-    const { errorCode, ScanError } = await import("../../src/scan/errors.ts")
+    const { CapabilityError, errorCode, ScanError } = await import("../../src/scan/errors.ts")
     const { AssetIntegrityError, AssetLoadError } = await import("../../src/scan/loader.ts")
-    const { CapabilityError } = await import("../../src/scan/detect.ts")
     expect(errorCode(new CapabilityError("x"))).toBe("webgl2-unavailable")
     expect(errorCode(new AssetIntegrityError("x"))).toBe("asset-integrity")
     expect(errorCode(new AssetLoadError("x"))).toBe("asset-load")
