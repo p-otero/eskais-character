@@ -1,0 +1,145 @@
+{
+  "$comment": "Every vendored file under assets/ and every remote file the engine fetches, with its source and licence. tooling/check-licences.mjs fails on an unlisted file or a licence outside the allow-list; tooling/fetch-models.mjs and the runtime loader check the remote hashes.",
+  "local": [
+    {
+      "files": [
+        "assets/anny/anny.bin",
+        "assets/anny/anny.json"
+      ],
+      "description": "NAVER Anny body model baked by tooling/bake/bake_anny.py: adult PCA body basis, face modifiers, ARKit-named facial actions, 104-bone skin.",
+      "source": "https://github.com/naver/anny",
+      "version": "0.6.2",
+      "commit": "8f35dc2df1c4062fd2fae86734f9705de50c0c2b",
+      "licence": "Apache-2.0 AND CC0-1.0",
+      "licenceNote": "Code Apache-2.0 (LICENSE); data/mpfb2 (MakeHuman/MPFB2 assets) and data/faceunits01 (Face Units, Mika Suominen) CC0-1.0. Default 'anny' topology only; no SMPL/SMPL-X assets.",
+      "checked": "2026-11-19"
+    },
+    {
+      "files": [
+        "assets/anny/face-landmarks.json"
+      ],
+      "description": "Correspondence from MediaPipe Face Landmarker points to the Anny mesh, calibrated by this repo's tooling on synthetic renders.",
+      "source": "this repository (generated)",
+      "licence": "Apache-2.0",
+      "checked": "2026-11-19"
+    },
+    {
+      "files": [
+        "assets/anny/body-calibration.json",
+        "assets/anny/body-prior.json",
+        "assets/anny/face-prior.json"
+      ],
+      "description": "Body feature calibration and the learned face/body priors (ridge regressions), trained by this repo's tooling/calibrate on synthetic people rendered from Anny.",
+      "source": "this repository (generated)",
+      "licence": "Apache-2.0",
+      "checked": "2026-11-19"
+    },
+    {
+      "files": [
+        "assets/hair/hair.bin",
+        "assets/hair/hair.json"
+      ],
+      "description": "Hair catalogue: geometry derived from CC0 MakeHuman hair (short02, short03, afro01, bob02, long01, ponytail01, braid01 from the system assets; littleright_bobcut_hair from Hair 01), re-bound to Anny's head by tooling/bake/hair/bake_hair.py. No textures: transparent card areas were cut away and strand brightness kept as a per-vertex shade.",
+      "source": "https://static.makehumancommunity.org/assets/assetpacks/index.html",
+      "sources": [
+        {
+          "pack": "MakeHuman system assets",
+          "url": "https://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip",
+          "sha256": "b542127a8e25547c7c29c19f2d1d2adb9a664c80396ecd694095dbc8028a0107",
+          "bytes": 280737770,
+          "assets": [
+            "short02",
+            "short03",
+            "afro01",
+            "bob02",
+            "long01",
+            "ponytail01",
+            "braid01"
+          ],
+          "licenceProof": "Asset-pack page: 'System assets and materials for system assets, shared under CC0: MakeHuman system assets'; each .mhclo header: 'This asset was explicitly released as CC0 in september 2020.'"
+        },
+        {
+          "pack": "Hair 01",
+          "url": "https://files.makehumancommunity.org/asset_packs/hair01/hair01_cc0.zip",
+          "sha256": "49445d69848a313ec41a9970f6a0fe4bcf925c9f1c6ef40a76f119c2e07940c9",
+          "bytes": 227775853,
+          "assets": [
+            "littleright_bobcut_hair"
+          ],
+          "licenceProof": "https://static.makehumancommunity.org/assets/assetpacks/hair01.html lists littleright_bobcut_hair (author littleright) as CC0; packs/hair01.json in the zip: license CC0."
+        }
+      ],
+      "licence": "CC0-1.0",
+      "checked": "2026-11-20"
+    }
+  ],
+  "remote": [
+    {
+      "name": "face_landmarker.task",
+      "url": "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+      "sha256": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+      "bytes": 3758596,
+      "licence": "Apache-2.0",
+      "licenceNote": "MediaPipe model cards (BlazeFace short range, Face Mesh V2, Blendshape V2): 'LICENSED UNDER Apache License, Version 2.0'.",
+      "checked": "2026-11-19"
+    },
+    {
+      "name": "pose_landmarker_lite.task",
+      "url": "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task",
+      "sha256": "59929e1d1ee95287735ddd833b19cf4ac46d29bc7afddbbf6753c459690d574a",
+      "bytes": 5777746,
+      "licence": "Apache-2.0",
+      "licenceNote": "BlazePose GHUM 3D model card: 'LICENSED UNDER Apache License, Version 2.0'.",
+      "checked": "2026-11-19"
+    },
+    {
+      "name": "pose_landmarker_full.task",
+      "url": "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task",
+      "sha256": "5134a3aad27a58b93da0088d431f366da362b44e3ccfbe3462b3827a839011b1",
+      "bytes": 9398198,
+      "licence": "Apache-2.0",
+      "licenceNote": "BlazePose GHUM 3D model card: 'LICENSED UNDER Apache License, Version 2.0'. Pin /1/: /latest/ serves a different file.",
+      "checked": "2026-11-19"
+    },
+    {
+      "name": "vision_wasm_module_internal.js",
+      "url": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.2.3/wasm/vision_wasm_module_internal.js",
+      "sha256": "d29996249490361715c769c6a49b43ad47e6ac9a28a8e8bce8d02b238e897851",
+      "bytes": 336662,
+      "licence": "Apache-2.0",
+      "licenceNote": "@mediapipe/tasks-vision 1.2.3 (npm licence field Apache-2.0); same bytes as node_modules/@mediapipe/tasks-vision/wasm.",
+      "package": true,
+      "checked": "2026-11-19"
+    },
+    {
+      "name": "vision_wasm_module_internal.wasm",
+      "url": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.2.3/wasm/vision_wasm_module_internal.wasm",
+      "sha256": "a269e84b12aefc93c9d6a4d62b01f41e5434a9fa941533bb8e75b1e3d1669e46",
+      "bytes": 14665738,
+      "licence": "Apache-2.0",
+      "licenceNote": "@mediapipe/tasks-vision 1.2.3 (npm licence field Apache-2.0); same bytes as node_modules/@mediapipe/tasks-vision/wasm.",
+      "package": true,
+      "checked": "2026-11-19"
+    },
+    {
+      "name": "vision_wasm_internal.js",
+      "url": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.2.3/wasm/vision_wasm_internal.js",
+      "sha256": "2aa5fd3fdd3d8208cd7587df0bb19fb6925c4ea16a76dd025aedc1f64d6a6309",
+      "bytes": 336624,
+      "licence": "Apache-2.0",
+      "licenceNote": "@mediapipe/tasks-vision 1.2.3 (npm licence field Apache-2.0); the classic-worker loader and its WASM, same bytes as node_modules/@mediapipe/tasks-vision/wasm.",
+      "package": true,
+      "checked": "2026-11-20"
+    },
+    {
+      "name": "vision_wasm_internal.wasm",
+      "url": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.2.3/wasm/vision_wasm_internal.wasm",
+      "sha256": "225bc06c0f51a9cf31fea0e9e0b0243e9e01fb5ef332cc1a7fa6656dbdfdaabf",
+      "bytes": 14665716,
+      "licence": "Apache-2.0",
+      "licenceNote": "@mediapipe/tasks-vision 1.2.3 (npm licence field Apache-2.0); the classic-worker loader and its WASM, same bytes as node_modules/@mediapipe/tasks-vision/wasm.",
+      "package": true,
+      "checked": "2026-11-20"
+    }
+  ]
+}

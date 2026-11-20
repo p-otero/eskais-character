@@ -1,0 +1,31 @@
+{
+  "$schema": "../node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript"],
+  "categories": {
+    "correctness": "off",
+    "suspicious": "off",
+    "pedantic": "off",
+    "perf": "off",
+    "style": "off",
+    "restriction": "off",
+    "nursery": "off"
+  },
+  "rules": {
+    "typescript/restrict-template-expressions": [
+      "error",
+      {
+        "allowAny": false,
+        "allowArray": false,
+        "allowBoolean": false,
+        "allowNever": false,
+        "allowNullish": false,
+        "allowNumber": false,
+        "allowRegExp": false
+      }
+    ],
+    "typescript/no-floating-promises": "error",
+    "typescript/no-misused-promises": "error",
+    "typescript/await-thenable": "error"
+  },
+  "ignorePatterns": ["**/*.js", "**/*.mjs", "**/package/consumers/**"]
+}

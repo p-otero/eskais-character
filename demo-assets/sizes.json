@@ -1,0 +1,14 @@
+{
+  "character-soft-toon.glb": {
+    "bytes": 997664,
+    "gzip": 534372,
+    "warnings": 0,
+    "targets": 23
+  },
+  "character-cel-outline.glb": {
+    "bytes": 997652,
+    "gzip": 534401,
+    "warnings": 0,
+    "targets": 23
+  }
+}

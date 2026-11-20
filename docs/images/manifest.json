@@ -1,0 +1,754 @@
+{
+  "generator": "eskais-synth/1",
+  "note": "Truth (left) and fitted character (right) for held-out synthetic people; tooling/calibrate/side-by-side.ts.",
+  "seed": 1,
+  "count": 6,
+  "subjects": [
+    {
+      "id": "s000",
+      "phenotype": {
+        "gender": 0.6143665465293453,
+        "age": 0.6209848596248776,
+        "muscle": 0.524702335963957,
+        "weight": 0.9329458707245067,
+        "height": 0.9215401083929465,
+        "proportions": 0.30299315266311166
+      },
+      "face": {
+        "head-scale-horiz": 0,
+        "head-scale-vert": 0,
+        "head-fat": 0.594,
+        "head-age": -0.013,
+        "head-angle": -0.116,
+        "forehead-scale-vert": -0.415,
+        "forehead-temple": -0.519,
+        "eyebrows-trans-up": 0.321,
+        "eyebrows-angle-up": -0.371,
+        "eye-scale": -0.087,
+        "eye-trans-up": 0.358,
+        "eye-trans-out": -0.353,
+        "eye-height2": 0,
+        "eye-corner1-up": 0.31,
+        "eye-epicanthus": 0.265,
+        "cheek-bones": 0.324,
+        "cheek-volume": 0,
+        "nose-scale-horiz": 0.308,
+        "nose-scale-vert": -0.212,
+        "nose-scale-depth": -0.301,
+        "nose-trans-up": 0.271,
+        "nose-point-width": -0.447,
+        "nose-nostrils-width": -0.542,
+        "mouth-scale-horiz": 0,
+        "mouth-scale-vert": 0,
+        "mouth-trans-up": 0.587,
+        "mouth-lowerlip-height": 0,
+        "mouth-upperlip-height": -0.237,
+        "chin-width": 0,
+        "chin-height": 0,
+        "chin-prominent": 0,
+        "chin-jaw-drop": 0
+      },
+      "colors": {
+        "skin": [79, 50, 35],
+        "eyes": [108, 125, 130],
+        "hair": [157, 140, 133],
+        "brows": [126, 112, 106],
+        "beard": null
+      },
+      "hair": "braid",
+      "light": {
+        "azimuth": 0.20439536729827523,
+        "elevation": 0.41650287071242925
+      },
+      "background": [187, 209, 168],
+      "fitted": {
+        "id": "s000-fit",
+        "phenotype": {
+          "gender": 0.4879426045382093,
+          "age": 0.7744284682572046,
+          "muscle": 0.4450993862159408,
+          "weight": 0.4392161095822268,
+          "height": 0.7127333806611308,
+          "proportions": 0.4937223588632773
+        },
+        "face": {
+          "head-scale-horiz": 0.2026,
+          "head-scale-vert": -0.0663,
+          "head-fat": 0.3866,
+          "head-age": -0.0106,
+          "head-angle": 0.0631,
+          "forehead-scale-vert": -0.0126,
+          "forehead-temple": -0.0044,
+          "eyebrows-trans-up": 0.0141,
+          "eyebrows-angle-up": -0.1107,
+          "eye-scale": -0.075,
+          "eye-trans-up": -0.0285,
+          "eye-trans-out": -0.1742,
+          "eye-height2": 0.0382,
+          "eye-corner1-up": 0.0224,
+          "eye-epicanthus": 0.0598,
+          "cheek-bones": -0.0182,
+          "cheek-volume": -0.0263,
+          "nose-scale-horiz": 0.0818,
+          "nose-scale-vert": 0.0053,
+          "nose-scale-depth": 0.0235,
+          "nose-trans-up": -0.0355,
+          "nose-point-width": -0.0176,
+          "nose-nostrils-width": 0.0082,
+          "mouth-scale-horiz": 0.0089,
+          "mouth-scale-vert": -0.0017,
+          "mouth-trans-up": 0.0934,
+          "mouth-lowerlip-height": 0.068,
+          "mouth-upperlip-height": 0.0035,
+          "chin-width": -0.0044,
+          "chin-height": 0.0674,
+          "chin-prominent": 0.0083,
+          "chin-jaw-drop": 0.0072
+        },
+        "colors": {
+          "skin": [85, 56, 42],
+          "eyes": [97, 102, 101],
+          "hair": [170, 152, 144],
+          "brows": [160, 143, 136],
+          "beard": null
+        },
+        "hair": "fringe-bob",
+        "light": {
+          "azimuth": 0.20439536729827523,
+          "elevation": 0.41650287071242925
+        },
+        "background": [187, 209, 168]
+      }
+    },
+    {
+      "id": "s000-fit",
+      "phenotype": {
+        "gender": 0.4879426045382093,
+        "age": 0.7744284682572046,
+        "muscle": 0.4450993862159408,
+        "weight": 0.4392161095822268,
+        "height": 0.7127333806611308,
+        "proportions": 0.4937223588632773
+      },
+      "face": {
+        "head-scale-horiz": 0.2026,
+        "head-scale-vert": -0.0663,
+        "head-fat": 0.3866,
+        "head-age": -0.0106,
+        "head-angle": 0.0631,
+        "forehead-scale-vert": -0.0126,
+        "forehead-temple": -0.0044,
+        "eyebrows-trans-up": 0.0141,
+        "eyebrows-angle-up": -0.1107,
+        "eye-scale": -0.075,
+        "eye-trans-up": -0.0285,
+        "eye-trans-out": -0.1742,
+        "eye-height2": 0.0382,
+        "eye-corner1-up": 0.0224,
+        "eye-epicanthus": 0.0598,
+        "cheek-bones": -0.0182,
+        "cheek-volume": -0.0263,
+        "nose-scale-horiz": 0.0818,
+        "nose-scale-vert": 0.0053,
+        "nose-scale-depth": 0.0235,
+        "nose-trans-up": -0.0355,
+        "nose-point-width": -0.0176,
+        "nose-nostrils-width": 0.0082,
+        "mouth-scale-horiz": 0.0089,
+        "mouth-scale-vert": -0.0017,
+        "mouth-trans-up": 0.0934,
+        "mouth-lowerlip-height": 0.068,
+        "mouth-upperlip-height": 0.0035,
+        "chin-width": -0.0044,
+        "chin-height": 0.0674,
+        "chin-prominent": 0.0083,
+        "chin-jaw-drop": 0.0072
+      },
+      "colors": {
+        "skin": [85, 56, 42],
+        "eyes": [97, 102, 101],
+        "hair": [170, 152, 144],
+        "brows": [160, 143, 136],
+        "beard": null
+      },
+      "hair": "fringe-bob",
+      "light": {
+        "azimuth": 0.20439536729827523,
+        "elevation": 0.41650287071242925
+      },
+      "background": [187, 209, 168],
+      "look": {
+        "stylize": 0.5,
+        "outfit": "casual"
+      }
+    },
+    {
+      "id": "s001",
+      "phenotype": {
+        "gender": 0.9300943191861735,
+        "age": 0.6786846135463566,
+        "muscle": 0.39951996682211754,
+        "weight": 0.15583786428906024,
+        "height": 0.41111832328606396,
+        "proportions": 0.34189243058208374
+      },
+      "face": {
+        "head-scale-horiz": 0,
+        "head-scale-vert": 0.038,
+        "head-fat": 0.37,
+        "head-age": 0,
+        "head-angle": -0.403,
+        "forehead-scale-vert": 0.473,
+        "forehead-temple": -0.428,
+        "eyebrows-trans-up": 0,
+        "eyebrows-angle-up": -0.21,
+        "eye-scale": -0.43,
+        "eye-trans-up": -0.239,
+        "eye-trans-out": 0,
+        "eye-height2": 0,
+        "eye-corner1-up": 0.01,
+        "eye-epicanthus": -0.346,
+        "cheek-bones": 0,
+        "cheek-volume": 0.59,
+        "nose-scale-horiz": 0,
+        "nose-scale-vert": 0,
+        "nose-scale-depth": -0.38,
+        "nose-trans-up": 0.581,
+        "nose-point-width": 0.265,
+        "nose-nostrils-width": 0,
+        "mouth-scale-horiz": -0.299,
+        "mouth-scale-vert": 0,
+        "mouth-trans-up": 0,
+        "mouth-lowerlip-height": 0,
+        "mouth-upperlip-height": -0.484,
+        "chin-width": -0.11,
+        "chin-height": -0.255,
+        "chin-prominent": 0,
+        "chin-jaw-drop": 0.491
+      },
+      "colors": {
+        "skin": [91, 57, 40],
+        "eyes": [88, 57, 39],
+        "hair": [143, 66, 38],
+        "brows": [114, 53, 30],
+        "beard": null
+      },
+      "hair": "braid",
+      "light": {
+        "azimuth": -0.3401411708910018,
+        "elevation": 0.4818646122701466
+      },
+      "background": [151, 154, 207],
+      "fitted": {
+        "id": "s001-fit",
+        "phenotype": {
+          "gender": 0.8037756773868213,
+          "age": 0.7795930718489062,
+          "muscle": 0.5596446978776144,
+          "weight": 0.14698310761807418,
+          "height": 0.4502396126847262,
+          "proportions": 0.2929740797377613
+        },
+        "face": {
+          "head-scale-horiz": 0.2657,
+          "head-scale-vert": -0.0905,
+          "head-fat": 0.3185,
+          "head-age": -0.0106,
+          "head-angle": -0.0604,
+          "forehead-scale-vert": -0.0126,
+          "forehead-temple": -0.0044,
+          "eyebrows-trans-up": 0.0141,
+          "eyebrows-angle-up": 0.0405,
+          "eye-scale": 0.0241,
+          "eye-trans-up": -0.0887,
+          "eye-trans-out": 0.0755,
+          "eye-height2": -0.0131,
+          "eye-corner1-up": 0.0224,
+          "eye-epicanthus": -0.1087,
+          "cheek-bones": -0.0182,
+          "cheek-volume": -0.0263,
+          "nose-scale-horiz": 0.1027,
+          "nose-scale-vert": -0.1357,
+          "nose-scale-depth": 0.0235,
+          "nose-trans-up": 0.0507,
+          "nose-point-width": -0.0176,
+          "nose-nostrils-width": 0.1523,
+          "mouth-scale-horiz": -0.2082,
+          "mouth-scale-vert": -0.0017,
+          "mouth-trans-up": -0.0406,
+          "mouth-lowerlip-height": 0.1273,
+          "mouth-upperlip-height": 0.0035,
+          "chin-width": -0.0044,
+          "chin-height": -0.0975,
+          "chin-prominent": 0.0083,
+          "chin-jaw-drop": 0.0072
+        },
+        "colors": {
+          "skin": [101, 64, 47],
+          "eyes": [85, 56, 40],
+          "hair": [161, 77, 49],
+          "brows": [158, 76, 47],
+          "beard": null
+        },
+        "hair": "fringe-bob",
+        "light": {
+          "azimuth": -0.3401411708910018,
+          "elevation": 0.4818646122701466
+        },
+        "background": [151, 154, 207]
+      }
+    },
+    {
+      "id": "s001-fit",
+      "phenotype": {
+        "gender": 0.8037756773868213,
+        "age": 0.7795930718489062,
+        "muscle": 0.5596446978776144,
+        "weight": 0.14698310761807418,
+        "height": 0.4502396126847262,
+        "proportions": 0.2929740797377613
+      },
+      "face": {
+        "head-scale-horiz": 0.2657,
+        "head-scale-vert": -0.0905,
+        "head-fat": 0.3185,
+        "head-age": -0.0106,
+        "head-angle": -0.0604,
+        "forehead-scale-vert": -0.0126,
+        "forehead-temple": -0.0044,
+        "eyebrows-trans-up": 0.0141,
+        "eyebrows-angle-up": 0.0405,
+        "eye-scale": 0.0241,
+        "eye-trans-up": -0.0887,
+        "eye-trans-out": 0.0755,
+        "eye-height2": -0.0131,
+        "eye-corner1-up": 0.0224,
+        "eye-epicanthus": -0.1087,
+        "cheek-bones": -0.0182,
+        "cheek-volume": -0.0263,
+        "nose-scale-horiz": 0.1027,
+        "nose-scale-vert": -0.1357,
+        "nose-scale-depth": 0.0235,
+        "nose-trans-up": 0.0507,
+        "nose-point-width": -0.0176,
+        "nose-nostrils-width": 0.1523,
+        "mouth-scale-horiz": -0.2082,
+        "mouth-scale-vert": -0.0017,
+        "mouth-trans-up": -0.0406,
+        "mouth-lowerlip-height": 0.1273,
+        "mouth-upperlip-height": 0.0035,
+        "chin-width": -0.0044,
+        "chin-height": -0.0975,
+        "chin-prominent": 0.0083,
+        "chin-jaw-drop": 0.0072
+      },
+      "colors": {
+        "skin": [101, 64, 47],
+        "eyes": [85, 56, 40],
+        "hair": [161, 77, 49],
+        "brows": [158, 76, 47],
+        "beard": null
+      },
+      "hair": "fringe-bob",
+      "light": {
+        "azimuth": -0.3401411708910018,
+        "elevation": 0.4818646122701466
+      },
+      "background": [151, 154, 207],
+      "look": {
+        "stylize": 0.5,
+        "outfit": "casual"
+      }
+    },
+    {
+      "id": "s002",
+      "phenotype": {
+        "gender": 0.3984353045467287,
+        "age": 0.7077426154259592,
+        "muscle": 0.18357375455088915,
+        "weight": 0.7890621252823622,
+        "height": 0.32715399442240595,
+        "proportions": 0.8531966289272532
+      },
+      "face": {
+        "head-scale-horiz": -0.087,
+        "head-scale-vert": 0,
+        "head-fat": -0.306,
+        "head-age": 0.315,
+        "head-angle": 0,
+        "forehead-scale-vert": -0.35,
+        "forehead-temple": 0,
+        "eyebrows-trans-up": 0,
+        "eyebrows-angle-up": -0.208,
+        "eye-scale": 0.446,
+        "eye-trans-up": 0,
+        "eye-trans-out": -0.174,
+        "eye-height2": 0,
+        "eye-corner1-up": 0.508,
+        "eye-epicanthus": 0.082,
+        "cheek-bones": 0,
+        "cheek-volume": -0.516,
+        "nose-scale-horiz": 0,
+        "nose-scale-vert": 0.253,
+        "nose-scale-depth": 0.17,
+        "nose-trans-up": 0.055,
+        "nose-point-width": 0,
+        "nose-nostrils-width": -0.468,
+        "mouth-scale-horiz": 0.217,
+        "mouth-scale-vert": 0.034,
+        "mouth-trans-up": 0.333,
+        "mouth-lowerlip-height": -0.5,
+        "mouth-upperlip-height": 0,
+        "chin-width": 0,
+        "chin-height": 0.433,
+        "chin-prominent": -0.13,
+        "chin-jaw-drop": 0
+      },
+      "colors": {
+        "skin": [170, 120, 87],
+        "eyes": [70, 105, 66],
+        "hair": [95, 56, 37],
+        "brows": [76, 45, 30],
+        "beard": null
+      },
+      "hair": "fringe-bob",
+      "light": {
+        "azimuth": -0.2627083659172058,
+        "elevation": 0.41220489302650093
+      },
+      "background": [184, 189, 161],
+      "fitted": {
+        "id": "s002-fit",
+        "phenotype": {
+          "gender": 0.294258711536273,
+          "age": 0.6806449729303131,
+          "muscle": 0.06929920647345761,
+          "weight": 0.7598676602321088,
+          "height": 0.21145442026061778,
+          "proportions": 0.8608214738745561
+        },
+        "face": {
+          "head-scale-horiz": -0.0679,
+          "head-scale-vert": 0.0077,
+          "head-fat": -0.13,
+          "head-age": -0.0106,
+          "head-angle": -0.0104,
+          "forehead-scale-vert": -0.0126,
+          "forehead-temple": -0.0044,
+          "eyebrows-trans-up": 0.0141,
+          "eyebrows-angle-up": -0.0225,
+          "eye-scale": 0.1757,
+          "eye-trans-up": 0.0141,
+          "eye-trans-out": -0.3401,
+          "eye-height2": -0.0005,
+          "eye-corner1-up": 0.0224,
+          "eye-epicanthus": -0.1191,
+          "cheek-bones": -0.0182,
+          "cheek-volume": -0.0263,
+          "nose-scale-horiz": -0.0699,
+          "nose-scale-vert": -0.0016,
+          "nose-scale-depth": 0.0235,
+          "nose-trans-up": -0.1656,
+          "nose-point-width": -0.0176,
+          "nose-nostrils-width": -0.1852,
+          "mouth-scale-horiz": -0.0157,
+          "mouth-scale-vert": -0.0017,
+          "mouth-trans-up": 0.3943,
+          "mouth-lowerlip-height": 0.0519,
+          "mouth-upperlip-height": 0.0035,
+          "chin-width": -0.0044,
+          "chin-height": 0.4978,
+          "chin-prominent": 0.0083,
+          "chin-jaw-drop": 0.0072
+        },
+        "colors": {
+          "skin": [151, 106, 77],
+          "eyes": [73, 105, 69],
+          "hair": [105, 64, 44],
+          "brows": [89, 56, 39],
+          "beard": null
+        },
+        "hair": "long",
+        "light": {
+          "azimuth": -0.2627083659172058,
+          "elevation": 0.41220489302650093
+        },
+        "background": [184, 189, 161]
+      }
+    },
+    {
+      "id": "s003",
+      "phenotype": {
+        "gender": 0.11061730640940368,
+        "age": 0.6312420832924545,
+        "muscle": 0.4118211339227855,
+        "weight": 0.6589669994777069,
+        "height": 0.6377708590822295,
+        "proportions": 0.7685640689684079
+      },
+      "face": {
+        "head-scale-horiz": 0,
+        "head-scale-vert": 0,
+        "head-fat": 0,
+        "head-age": 0.441,
+        "head-angle": 0,
+        "forehead-scale-vert": 0.388,
+        "forehead-temple": 0.078,
+        "eyebrows-trans-up": -0.471,
+        "eyebrows-angle-up": 0.221,
+        "eye-scale": -0.582,
+        "eye-trans-up": 0.061,
+        "eye-trans-out": 0,
+        "eye-height2": 0,
+        "eye-corner1-up": 0.32,
+        "eye-epicanthus": -0.121,
+        "cheek-bones": 0,
+        "cheek-volume": 0.45,
+        "nose-scale-horiz": 0,
+        "nose-scale-vert": -0.379,
+        "nose-scale-depth": 0,
+        "nose-trans-up": 0.362,
+        "nose-point-width": 0,
+        "nose-nostrils-width": 0.493,
+        "mouth-scale-horiz": 0,
+        "mouth-scale-vert": 0,
+        "mouth-trans-up": 0.118,
+        "mouth-lowerlip-height": -0.354,
+        "mouth-upperlip-height": 0.526,
+        "chin-width": 0,
+        "chin-height": 0.118,
+        "chin-prominent": -0.412,
+        "chin-jaw-drop": 0.545
+      },
+      "colors": {
+        "skin": [217, 172, 138],
+        "eyes": [114, 98, 44],
+        "hair": [22, 15, 24],
+        "brows": [18, 12, 19],
+        "beard": null
+      },
+      "hair": "long",
+      "light": {
+        "azimuth": 0.4726521179545671,
+        "elevation": 0.42168274316936727
+      },
+      "background": [185, 205, 195],
+      "fitted": {
+        "id": "s003-fit",
+        "phenotype": {
+          "gender": 0.21344093075835452,
+          "age": 0.7305176772183863,
+          "muscle": 0.5970959582828849,
+          "weight": 0.646111106384783,
+          "height": 0.629668011286473,
+          "proportions": 0.7165922285013818
+        },
+        "face": {
+          "head-scale-horiz": -0.0722,
+          "head-scale-vert": 0.0362,
+          "head-fat": 0.1134,
+          "head-age": -0.0106,
+          "head-angle": 0.2627,
+          "forehead-scale-vert": -0.0126,
+          "forehead-temple": -0.0044,
+          "eyebrows-trans-up": 0.0141,
+          "eyebrows-angle-up": 0.0501,
+          "eye-scale": -0.1103,
+          "eye-trans-up": -0.1269,
+          "eye-trans-out": 0.0186,
+          "eye-height2": -0.1472,
+          "eye-corner1-up": 0.0224,
+          "eye-epicanthus": -0.0317,
+          "cheek-bones": -0.0182,
+          "cheek-volume": -0.0263,
+          "nose-scale-horiz": 0.1218,
+          "nose-scale-vert": -0.1406,
+          "nose-scale-depth": 0.0235,
+          "nose-trans-up": 0.185,
+          "nose-point-width": -0.0176,
+          "nose-nostrils-width": 0.2879,
+          "mouth-scale-horiz": 0.1822,
+          "mouth-scale-vert": -0.0017,
+          "mouth-trans-up": 0.0743,
+          "mouth-lowerlip-height": -0.035,
+          "mouth-upperlip-height": 0.0035,
+          "chin-width": -0.0044,
+          "chin-height": 0.1424,
+          "chin-prominent": 0.0083,
+          "chin-jaw-drop": 0.0072
+        },
+        "colors": {
+          "skin": [228, 182, 147],
+          "eyes": [113, 98, 51],
+          "hair": [28, 22, 30],
+          "brows": [30, 26, 30],
+          "beard": null
+        },
+        "hair": "long",
+        "light": {
+          "azimuth": 0.4726521179545671,
+          "elevation": 0.42168274316936727
+        },
+        "background": [185, 205, 195]
+      }
+    }
+  ],
+  "images": [
+    {
+      "file": "s000-face.png",
+      "kind": "face",
+      "subject": "s000",
+      "sha256": "60aa62db1a7e9d80dafbc4c34d0fb6636aa06f9bd6ef98ad3347343beac2b880"
+    },
+    {
+      "file": "s000-body.png",
+      "kind": "body",
+      "subject": "s000",
+      "sha256": "2a5545477de9d25d6b111177f4f6e040f3c53e26272c3eb6ec0d88ceb79527da"
+    },
+    {
+      "file": "s000-fit-turntable-soft-toon.png",
+      "kind": "turntable:soft-toon",
+      "subject": "s000-fit",
+      "sha256": "99dd0eeb4c704b59e4685aebd6026ee3b02aa1b4360f774c3f3da4bb8bef2c05"
+    },
+    {
+      "file": "s000-fit-portrait-soft-toon.png",
+      "kind": "portrait:soft-toon",
+      "subject": "s000-fit",
+      "sha256": "52a2217ef3b0389154b665e880b85e0f2f34b0ce0aa1d58a53f67d8059b244b0"
+    },
+    {
+      "file": "s000-fit-turntable-cel-outline.png",
+      "kind": "turntable:cel-outline",
+      "subject": "s000-fit",
+      "sha256": "66fafd2c537aad6a4ff15243393f838bde3b59003d0bdcb05abc673123bf10fb"
+    },
+    {
+      "file": "s000-fit-portrait-cel-outline.png",
+      "kind": "portrait:cel-outline",
+      "subject": "s000-fit",
+      "sha256": "3ee209d0c5862d494dd6728d5534f1e01da8c63036c1e4040a6fc91fcf2ae966"
+    },
+    {
+      "file": "s000-fit-turntable-low-poly.png",
+      "kind": "turntable:low-poly",
+      "subject": "s000-fit",
+      "sha256": "002314b6505c05a828b9ae0648b8caf6323b19a3c1843a376f84e65c7ec7b5d4"
+    },
+    {
+      "file": "s000-fit-portrait-low-poly.png",
+      "kind": "portrait:low-poly",
+      "subject": "s000-fit",
+      "sha256": "5f6291f4c232b39ec3049043c70339ab4f24d307331d294270ebb0bcd40ee439"
+    },
+    {
+      "file": "s000-fit-turntable-clay.png",
+      "kind": "turntable:clay",
+      "subject": "s000-fit",
+      "sha256": "35d52f7b7a8d21bd36cad5e4c2a9ce4a8cb9568b6fadb6981c94bd89e40db18a"
+    },
+    {
+      "file": "s000-fit-portrait-clay.png",
+      "kind": "portrait:clay",
+      "subject": "s000-fit",
+      "sha256": "913f3f8ae62af99949bb8a540889ac4bba6fbef6f2ff75d84d81016c3ffda216"
+    },
+    {
+      "file": "s000-fit-wave-front.png",
+      "kind": "clip:wave:soft-toon:front",
+      "subject": "s000-fit",
+      "sha256": "ac7f5d8b45f9ecc2e9f26da573680eccafa84038fa33b627129b8bb47995649c"
+    },
+    {
+      "file": "s000-fit-wave-three-quarter.png",
+      "kind": "clip:wave:soft-toon:three-quarter",
+      "subject": "s000-fit",
+      "sha256": "eb50d46f250ea66c42852dcb0bc1b0e916c180fb67e795dd7b8c2932bf999dcf"
+    },
+    {
+      "file": "s001-face.png",
+      "kind": "face",
+      "subject": "s001",
+      "sha256": "e6015014132cd265076052d35c7fcf45e828ecc30c11eeabe474125f98e20d92"
+    },
+    {
+      "file": "s001-body.png",
+      "kind": "body",
+      "subject": "s001",
+      "sha256": "bf289cf1bd1f8144fc46b22777acb2c6b7cbb69427ea29a3bb4327acaf5695c8"
+    },
+    {
+      "file": "s001-fit-turntable-soft-toon.png",
+      "kind": "turntable:soft-toon",
+      "subject": "s001-fit",
+      "sha256": "6fa42c4211c1d7a5e2eb86fc30ea7af9474b209201f82e0ff7fabed35c182592"
+    },
+    {
+      "file": "s001-fit-portrait-soft-toon.png",
+      "kind": "portrait:soft-toon",
+      "subject": "s001-fit",
+      "sha256": "e8aeb2788058edb2f819cac380ea004d2b2dfde1dc9c2e839480b0d38ee2baae"
+    },
+    {
+      "file": "s001-fit-turntable-cel-outline.png",
+      "kind": "turntable:cel-outline",
+      "subject": "s001-fit",
+      "sha256": "9d03d871579e3f5a5f7cbf7b72e8520dbb8854d455ea3387e75ed4c7cff21ba2"
+    },
+    {
+      "file": "s001-fit-portrait-cel-outline.png",
+      "kind": "portrait:cel-outline",
+      "subject": "s001-fit",
+      "sha256": "07a1120c939a0be6f24992b85c060536d4f608d42b217c9836bdc6a9fd75da4c"
+    },
+    {
+      "file": "s001-fit-turntable-low-poly.png",
+      "kind": "turntable:low-poly",
+      "subject": "s001-fit",
+      "sha256": "b93a531aa295a48c11a667bda9239b85bba48449d0e122591634896433cca3a2"
+    },
+    {
+      "file": "s001-fit-portrait-low-poly.png",
+      "kind": "portrait:low-poly",
+      "subject": "s001-fit",
+      "sha256": "158ed859da93020f1ff3b1ed88e5c77be53cac1d89592c256c6f0c48469722d5"
+    },
+    {
+      "file": "s001-fit-turntable-clay.png",
+      "kind": "turntable:clay",
+      "subject": "s001-fit",
+      "sha256": "17337f17ed82d47b11b53ebf5d7894baa336167b85a5c25f4178b3432ebf34cb"
+    },
+    {
+      "file": "s001-fit-portrait-clay.png",
+      "kind": "portrait:clay",
+      "subject": "s001-fit",
+      "sha256": "0b8147554850341577628fbe812d0c96b6975660a62f909c98649268a5fc7448"
+    },
+    {
+      "file": "s002-face.png",
+      "kind": "face",
+      "subject": "s002",
+      "sha256": "e7e5eb020e5abbdb52532b99e8c79387a5632a8d75e276510c1960e0d2ebabd3"
+    },
+    {
+      "file": "s002-body.png",
+      "kind": "body",
+      "subject": "s002",
+      "sha256": "d8558090dd3e87902db4badf9e5145e713f7c7c55c5bfb8eb1207d3918aa54e7"
+    },
+    {
+      "file": "s003-face.png",
+      "kind": "face",
+      "subject": "s003",
+      "sha256": "5d800a7f685f0eb6a7f37772d5692e9a187c7d6f75dd4a0d0f54745666073189"
+    },
+    {
+      "file": "s003-body.png",
+      "kind": "body",
+      "subject": "s003",
+      "sha256": "7740fca180900a2ea546948d31fe5e09b8a1c491fe4d2f785cde46487d738f14"
+    }
+  ]
+}

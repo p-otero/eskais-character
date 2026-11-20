@@ -1,0 +1,51 @@
+{
+  "timeHeadroom": 4,
+  "stagesMs": {
+    "detect-face": 200,
+    "colors": 166,
+    "detect-body": 320,
+    "export": 399,
+    "fit-body": 219,
+    "fit-face": 181,
+    "hair": 20,
+    "total": 1493
+  },
+  "initMs": 4364,
+  "longTasksOver50Ms": 0,
+  "memoryMiB": 82,
+  "glbBytes": 6424757,
+  "downloads": {
+    "MediaPipe WASM loader": {
+      "gzip": 85306,
+      "brotli": 70511
+    },
+    "MediaPipe WASM": {
+      "gzip": 4357840,
+      "brotli": 3035885
+    },
+    "Face Landmarker model": {
+      "gzip": 3504300,
+      "brotli": 3304767
+    },
+    "Pose Landmarker full model": {
+      "gzip": 8780936,
+      "brotli": 8225478
+    },
+    "Pose Landmarker lite model (alternative)": {
+      "gzip": 5203210,
+      "brotli": 4823253
+    },
+    "Anny body model": {
+      "gzip": 1804883,
+      "brotli": 1129362
+    },
+    "Hair styles": {
+      "gzip": 220754,
+      "brotli": 195686
+    },
+    "Engine worker bundle": {
+      "gzip": 159886,
+      "brotli": 135224
+    }
+  }
+}

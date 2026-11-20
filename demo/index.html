@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' blob:; worker-src 'self' blob:; connect-src 'self' blob: https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.2.3/ https://storage.googleapis.com/mediapipe-models/; img-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="referrer" content="no-referrer" />
+    <title>Character scan demo</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: system-ui, sans-serif;
+      }
+      body {
+        margin: 0;
+        padding: 16px;
+        display: grid;
+        gap: 16px;
+        grid-template-columns: minmax(0, 1fr);
+      }
+      @media (min-width: 900px) {
+        body {
+          grid-template-columns: 320px minmax(0, 1fr);
+        }
+      }
+      #viewer {
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        background: #8884;
+        border-radius: 8px;
+      }
+      .photos {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .photos div {
+        position: relative;
+      }
+      .photos img {
+        width: 100%;
+        display: block;
+        border-radius: 6px;
+      }
+      .photos canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
+      .swatches span {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        margin-right: 6px;
+        border: 1px solid #8888;
+      }
+      pre {
+        font-size: 12px;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <h1>Character scan</h1>
+      <p>Everything runs in this tab. Photos stay in memory and are discarded after the scan.</p>
+      <label>Face photo <input id="face" type="file" accept="image/*" /></label><br />
+      <label>Body photo <input id="body" type="file" accept="image/*" /></label><br />
+      <label>Height (cm) <input id="height" type="number" min="120" max="220" /></label><br />
+      <button id="sample" type="button">Use a synthetic sample</button>
+      <button id="scan" type="button">Scan</button>
+      <fieldset>
+        <legend>Look</legend>
+        <label
+          >Style
+          <select id="style">
+            <option value="soft-toon">Soft toon</option>
+            <option value="cel-outline">Cel with outline</option>
+            <option value="low-poly">Low-poly</option>
+            <option value="clay">Clay</option>
+          </select></label
+        >
+        <label>Stylize <input id="stylize" type="range" min="0" max="1" step="0.1" value="0.5" /></label>
+        <label
+          >Outfit
+          <select id="outfit">
+            <option value="casual">Tee and joggers</option>
+            <option value="hoodie">Hoodie</option>
+          </select></label
+        >
+        <label
+          >Hair
+          <select id="hair">
+            <option value="crop">Crop</option>
+            <option value="side-part">Side part</option>
+            <option value="afro">Afro</option>
+            <option value="bob">Bob</option>
+            <option value="fringe-bob">Fringe bob</option>
+            <option value="long">Long</option>
+            <option value="ponytail">Ponytail</option>
+            <option value="braid">Braid</option>
+            <option value="buzz">Buzz</option>
+            <option value="none">None</option>
+          </select></label
+        >
+      </fieldset>
+      <div class="photos">
+        <div><img id="facePreview" alt="" /><canvas id="faceDots"></canvas></div>
+        <div><img id="bodyPreview" alt="" /><canvas id="bodyDots"></canvas></div>
+      </div>
+      <progress id="progress" max="1" value="0"></progress>
+      <div class="swatches" id="swatches"></div>
+      <pre id="log"></pre>
+    </section>
+    <canvas id="viewer"></canvas>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
