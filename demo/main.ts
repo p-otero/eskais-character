@@ -4,7 +4,8 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import sampleBody from "../fixtures/synthetic/s000-body.png?url"
 import sampleFace from "../fixtures/synthetic/s000-face.png?url"
-import { createScanEngine, type ScanEvent } from "../src/scan/index.ts"
+import { createScanEngine, type Character, type ScanEvent, type StyleId } from "../src/scan/index.ts"
+import { styleCharacter } from "../src/three/index.ts"
 
 function element<T extends HTMLElement>(id: string): T {
   const found = document.getElementById(id)
@@ -48,15 +49,10 @@ async function showGlb(glb: Uint8Array) {
   scene.clear()
   lights()
   gltf.scene.traverse((object) => {
-    if (!(object instanceof THREE.Mesh)) return
-    const material = object.material as THREE.MeshStandardMaterial
-    object.material = new THREE.MeshToonMaterial({
-      color: material.color,
-      vertexColors: material.vertexColors,
-      side: material.side,
-    })
-    if (object.morphTargetInfluences) morphed = object
+    if (object instanceof THREE.Mesh && object.morphTargetInfluences) morphed = object
   })
+  // The style the GLB was exported with, from its materials' extras.
+  styleCharacter(gltf.scene)
   scene.add(gltf.scene)
   // Frame the whole character: the skinned meshes' bounds come from their rest pose.
   const box = new THREE.Box3().setFromObject(gltf.scene)
@@ -115,7 +111,8 @@ function handle(event: ScanEvent) {
     if (influences) event.weights.forEach((weight, index) => (influences[index] = weight))
   }
   if (event.type === "done") {
-    void showGlb(event.character.glb)
+    current = event.character
+    void showGlb(event.character.glb.slice())
     const { colors } = event.character
     element("swatches").replaceChildren(
       ...[colors.skin, colors.eyes, colors.hair, colors.brows, colors.beard].flatMap((color) => {
@@ -139,3 +136,16 @@ element("scan").addEventListener("click", async () => {
   ))
     handle(event)
 })
+
+let current: Character | undefined
+async function restyle() {
+  if (!current) return
+  current = await engine.restyle(current, {
+    style: element<HTMLSelectElement>("style").value as StyleId,
+    stylize: Number(element<HTMLInputElement>("stylize").value),
+    outfit: element<HTMLSelectElement>("outfit").value as "casual" | "hoodie",
+    hair: element<HTMLSelectElement>("hair").value,
+  })
+  await showGlb(current.glb.slice())
+}
+for (const id of ["style", "stylize", "outfit", "hair"]) element(id).addEventListener("change", () => void restyle())

@@ -74,6 +74,41 @@
       <label>Height (cm) <input id="height" type="number" min="120" max="220" /></label><br />
       <button id="sample" type="button">Use a synthetic sample</button>
       <button id="scan" type="button">Scan</button>
+      <fieldset>
+        <legend>Look</legend>
+        <label
+          >Style
+          <select id="style">
+            <option value="soft-toon">Soft toon</option>
+            <option value="cel-outline">Cel with outline</option>
+            <option value="low-poly">Low-poly</option>
+            <option value="clay">Clay</option>
+          </select></label
+        >
+        <label>Stylize <input id="stylize" type="range" min="0" max="1" step="0.1" value="0.5" /></label>
+        <label
+          >Outfit
+          <select id="outfit">
+            <option value="casual">Tee and joggers</option>
+            <option value="hoodie">Hoodie</option>
+          </select></label
+        >
+        <label
+          >Hair
+          <select id="hair">
+            <option value="crop">Crop</option>
+            <option value="side-part">Side part</option>
+            <option value="afro">Afro</option>
+            <option value="bob">Bob</option>
+            <option value="fringe-bob">Fringe bob</option>
+            <option value="long">Long</option>
+            <option value="ponytail">Ponytail</option>
+            <option value="braid">Braid</option>
+            <option value="buzz">Buzz</option>
+            <option value="none">None</option>
+          </select></label
+        >
+      </fieldset>
       <div class="photos">
         <div><img id="facePreview" alt="" /><canvas id="faceDots"></canvas></div>
         <div><img id="bodyPreview" alt="" /><canvas id="bodyDots"></canvas></div>
