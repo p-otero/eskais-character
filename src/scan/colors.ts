@@ -161,9 +161,21 @@ export function sampleFaceColors(image: RgbaImage, landmarks: ArrayLike<number>)
     const lower = faceIndex.browLower[k] ?? upper
     const a = at(upper)
     const b = at(lower)
-    browSamples.push(...disk(image, [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], Math.round(faceWidth * 0.015)))
+    // A band from the lower landmark to twice the brow's height above it: the landmarks hug the brow ridge, and the
+    // hairs can sit higher.
+    for (const t of [0, 0.5, 1, 1.5, 2])
+      browSamples.push(
+        ...disk(image, [b[0] + (a[0] - b[0]) * t, b[1] + (a[1] - b[1]) * t], Math.round(faceWidth * 0.012)),
+      )
   })
-  const brows = robustColor(browSamples, 0, 0.5) ?? skin
+  // Brows are what differs most from the skin in that band, lighter or darker: grey or ginger brows on darker skin are
+  // lighter than it.
+  const browCore = browSamples
+    .map((color) => ({ color, distance: deltaE(color, skin) }))
+    .toSorted((first, second) => second.distance - first.distance)
+    .slice(0, Math.max(1, Math.round(browSamples.length * 0.3)))
+    .map(({ color }) => color)
+  const brows = robustColor(browCore, 0.1, 0.9) ?? skin
 
   // Background from the top corners; hair is what is neither background nor skin above the forehead.
   const corner = Math.round(Math.min(image.width, image.height) * 0.03)
