@@ -154,6 +154,15 @@ const harness = {
         })
       else if (event.type === "progress")
         events.push({ type: event.type, at, value: event.value, weights: Array.from(event.weights) })
+      else if (event.type === "mask")
+        events.push({
+          type: event.type,
+          at,
+          source: event.source,
+          width: event.width,
+          height: event.height,
+          data: await base64(event.data),
+        })
       else if (event.type === "stage")
         events.push({
           type: event.type,
@@ -212,7 +221,16 @@ const harness = {
               ? { value: event.value }
               : event.type === "model"
                 ? { bytes: event.glb.byteLength, targets: event.targetNames.length }
-                : null,
+                : event.type === "mask"
+                  ? {
+                      source: event.source,
+                      width: event.width,
+                      height: event.height,
+                      mean: event.data.reduce((sum, value) => sum + value, 0) / event.data.length,
+                    }
+                  : event.type === "landmarks"
+                    ? { source: event.source, aspect: event.aspect }
+                    : null,
       })
     }
     if (!done) throw new Error("The scan ended without a character.")

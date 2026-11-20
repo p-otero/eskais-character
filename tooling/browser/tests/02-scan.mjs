@@ -23,6 +23,19 @@ export async function scanStreamsEventsAndAValidGlb() {
       "progress never goes back",
     )
     assert.equal(result.weights.length, result.targetNames.length)
+    // A person mask per photo, each after its landmarks, small, with the photo's aspect, and covering some of it.
+    for (const source of ["face", "body"]) {
+      const maskAt = result.events.findIndex((event) => event.type === "mask" && event.detail.source === source)
+      const landmarksAt = result.events.findIndex(
+        (event) => event.type === "landmarks" && event.detail.source === source,
+      )
+      assert.ok(maskAt > landmarksAt && landmarksAt >= 0, `${source} mask after its landmarks`)
+      const { width, height, mean } = result.events[maskAt].detail
+      const { aspect } = result.events[landmarksAt].detail
+      assert.equal(Math.max(width, height), 256)
+      assert.ok(Math.abs(width / height - aspect) < 0.02, `${source} mask keeps the photo's aspect`)
+      assert.ok(mean > 10 && mean < 245, `${source} mask is neither empty nor full (${String(mean)})`)
+    }
     const { errors, warnings } = await validateGlb(new Uint8Array(result.glb))
     assert.deepEqual(errors, [], "the Khronos glTF validator reports no errors")
     assert.deepEqual(warnings, [], "nor warnings")

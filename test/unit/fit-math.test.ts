@@ -198,3 +198,30 @@ describe("scan errors", () => {
     expect((state.error as InstanceType<typeof ScanError>).code).toBe("no-face")
   })
 })
+
+describe("person mask", () => {
+  it("downsamples to at most 256 px on the long side, keeping the aspect and the values", async () => {
+    const { downsampleMask } = await import("../../src/scan/mask.ts")
+    const width = 540
+    const height = 960
+    const data = new Uint8Array(width * height)
+    for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) data[y * width + x] = x < width / 2 ? 255 : 0
+    const small = downsampleMask({ width, height, data })
+    expect(Math.max(small.width, small.height)).toBe(256)
+    expect(small.width / small.height).toBeCloseTo(width / height, 2)
+    expect(small.data[10 * small.width + 5]).toBe(255)
+    expect(small.data[10 * small.width + small.width - 5]).toBe(0)
+    const tiny = downsampleMask({ width: 100, height: 50, data: new Uint8Array(5000).fill(7) })
+    expect([tiny.width, tiny.height, tiny.data[0]]).toEqual([100, 50, 7])
+  })
+
+  it("lands in the hook's state by source", () => {
+    const data = new Uint8Array([0, 128, 255, 64])
+    const state = reduceScan(initialScanState, {
+      type: "event",
+      event: { type: "mask", source: "body", width: 2, height: 2, data },
+    })
+    expect(state.masks.body).toEqual({ width: 2, height: 2, data })
+    expect(state.masks.face).toBeNull()
+  })
+})

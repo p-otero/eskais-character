@@ -25,6 +25,7 @@ const controller = new AbortController()
 
 for await (const event of engine.scan({ face: faceFile, body: bodyFile }, { signal: controller.signal })) {
   if (event.type === "landmarks") drawPoints(event.points) // x, y pairs normalised to the photo
+  if (event.type === "mask") setMask(event) // { source, width, height, data }: person confidence 0-255, ≤ 256 px
   if (event.type === "model") viewer.load(event.glb) // once: the base character with every morph target
   if (event.type === "progress") viewer.setWeights(event.weights) // live morphing while the fit converges
   if (event.type === "done") viewer.load(event.character.glb)
@@ -81,7 +82,8 @@ yourself, copy the files and pass `assetUrls` (same bytes, same hashes).
 
 1. Photos are processed in memory, in a worker, and discarded; bitmaps are closed as soon as a stage is done.
 2. The output is only the character: parameters, colours, hair choice and GLB. No pixels, crops or landmarks of
-   the photo are kept in the result.
+   the photo are kept in the result. During a scan the host page receives normalised landmarks and a person mask of
+   at most 256 px (confidence only, no colour) for its transitions.
 3. No logging of image data.
 4. No network calls except fetching model and asset files from pinned URLs, checked by SHA-256.
 5. **No real people's photos anywhere** in this repository: tests, demos, fixtures and screenshots use synthetic

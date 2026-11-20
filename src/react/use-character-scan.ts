@@ -3,6 +3,13 @@ import type { ScanEngine } from "../scan/engine.ts"
 import { ScanError } from "../scan/errors.ts"
 import type { Character, RestyleOptions, ScanEvent, ScanInput, ScanOptions, ScanStage } from "../scan/types.ts"
 
+/** A person mask: confidence 0–255, row-major. */
+export interface ScanMask {
+  width: number
+  height: number
+  data: Uint8Array
+}
+
 export type ScanStatus = "idle" | "scanning" | "done" | "error" | "cancelled"
 
 /** Props-shaped scan state for ModelScan / ModelViewer. */
@@ -12,6 +19,8 @@ export interface CharacterScanState {
   /** 0..1. */
   progress: number
   landmarks: { face: Float32Array | null; body: Float32Array | null }
+  /** Person masks for the photo-to-character transition (see the `mask` event). */
+  masks: { face: ScanMask | null; body: ScanMask | null }
   /** The base GLB to load once; morph it by setting `weights`. */
   model: { glb: Uint8Array; targetNames: string[] } | null
   weights: Float32Array | null
@@ -24,6 +33,7 @@ export const initialScanState: CharacterScanState = {
   stage: null,
   progress: 0,
   landmarks: { face: null, body: null },
+  masks: { face: null, body: null },
   model: null,
   weights: null,
   character: null,
@@ -53,6 +63,11 @@ export function reduceScan(state: CharacterScanState, action: Action): Character
       switch (event.type) {
         case "stage":
           return event.ms === undefined ? { ...state, stage: event.stage } : state
+        case "mask":
+          return {
+            ...state,
+            masks: { ...state.masks, [event.source]: { width: event.width, height: event.height, data: event.data } },
+          }
         case "landmarks":
           return { ...state, landmarks: { ...state.landmarks, [event.source]: event.points } }
         case "model":

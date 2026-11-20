@@ -21,12 +21,13 @@ import { stylizeFace } from "../model/stylize.ts"
 import { exportCharacter } from "./export.ts"
 import { resolveLook } from "./look.ts"
 import { hex, sampleFaceColors, type FaceColors, type Rgb } from "./colors.ts"
-import type { Detectors } from "./detect.ts"
+import type { Detectors, PersonMask } from "./detect.ts"
 import { ScanError } from "./errors.ts"
 import { createBodyFeatureModel, fitBody, type BodyCalibration } from "./fit-body.ts"
 import { fitFace, type FaceLandmarkMap } from "./fit-face.ts"
 import { pickHair } from "./hair-pick.ts"
 import { fetchPinned, type AssetUrls } from "./loader.ts"
+import { downsampleMask } from "./mask.ts"
 import { bodyFeatureNames, measureBody } from "./measure-body.ts"
 import { alignedFaceShape, predictLinear, type FacePrior, type LinearPrior } from "./priors.ts"
 import type { ScanRequest } from "./protocol.ts"
@@ -58,6 +59,13 @@ function readPixels(image: ImageBitmap) {
   canvas.width = 1
   canvas.height = 1
   return pixels
+}
+
+function emitMask(context: ScanContext, source: "face" | "body", mask: PersonMask): void {
+  const small = downsampleMask(mask)
+  context.emit({ type: "mask", source, width: small.width, height: small.height, data: small.data }, [
+    small.data.buffer,
+  ])
 }
 
 function points2d(landmarks: Float32Array, stride: number): Float32Array {
@@ -107,6 +115,9 @@ export async function runScan(
   context.emit({ type: "landmarks", source: "face", points: faceLandmarks, aspect: face.width / face.height }, [
     faceLandmarks.buffer,
   ])
+  // The face photo's person mask comes from the pose model too: a head-and-shoulders photo is enough for it.
+  const faceMask = detectors.detectBody(request.face)?.mask
+  if (faceMask) emitMask(context, "face", faceMask)
 
   stage("colors")
   const sampled = sampleFaceColors(readPixels(request.face), face.landmarks)
@@ -124,6 +135,7 @@ export async function runScan(
       context.emit({ type: "landmarks", source: "body", points: bodyLandmarks, aspect: body.width / body.height }, [
         bodyLandmarks.buffer,
       ])
+      if (body.mask) emitMask(context, "body", body.mask)
       measured = body.mask ? measureBody(body.landmarks, body.mask, body.width, body.height) : null
       if (!measured) warnings.push("The body outline was not found; the body keeps average proportions.")
     }

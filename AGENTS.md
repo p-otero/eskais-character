@@ -14,7 +14,9 @@ APIs, no Python. Python is allowed only at build time (`tooling/bake`).
 ## Privacy (hard constraints)
 
 1. Photos are processed in memory, in a worker, and discarded: close every `ImageBitmap` as soon as its stage is done.
-2. The output is only the character: parameters, colours, hair choice and GLB. No pixels, crops or photo landmarks.
+2. The output is only the character: parameters, colours, hair choice and GLB. No pixels, crops or photo landmarks
+   are kept in it. While a scan runs, the host page gets normalised landmarks and a low-resolution person mask
+   (≤ 256 px, 0–255 confidence) for its transitions; never the photo's pixels, and nothing is kept afterwards.
 3. No logging of image data. `character/no-console` forbids `console.*` in `src/**`.
 4. No network except fetching model and asset files from pinned URLs with a SHA-256 check, in `src/scan/loader.ts`
    only (`character/no-network-outside-loader`). Results sent from the worker never carry pixels

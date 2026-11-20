@@ -94,6 +94,12 @@ export type ScanEvent =
    * letterbox correction applies. Points may fall slightly outside 0..1 when a feature is cut off by the frame.
    */
   | { type: "landmarks"; source: "face" | "body"; points: Float32Array; aspect: number }
+  /**
+   * The person's segmentation mask for a photo, after its landmarks: confidence 0–255, row-major, at most 256 px on
+   * the long side, with the photo's aspect ratio (width / height ≈ the landmarks' aspect). For transitions that send
+   * the photo's person pixels onto the character and its background away; the photo itself never leaves the host.
+   */
+  | { type: "mask"; source: "face" | "body"; width: number; height: number; data: Uint8Array }
   /** The base character: mean shape with every morph target, weights at zero. Sent once, before fitting. */
   | { type: "model"; glb: Uint8Array; targetNames: string[] }
   /** Weights while the fit converges, aligned with the model's `targetNames`; `value` is 0..1 overall progress. */

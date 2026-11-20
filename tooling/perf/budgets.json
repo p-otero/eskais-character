@@ -1,7 +1,7 @@
 {
   "timeHeadroom": 4,
   "stagesMs": {
-    "detect-face": 80,
+    "detect-face": 200,
     "colors": 166,
     "detect-body": 320,
     "export": 399,

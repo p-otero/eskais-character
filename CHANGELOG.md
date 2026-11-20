@@ -13,6 +13,10 @@ stylised, rigged character with a face. Nothing leaves the browser.
 - Looks: four styles (`soft-toon`, `cel-outline`, `low-poly`, `clay`), a `stylize` amount, an outfit (tee or hoodie,
   joggers, sneakers) and ten hair choices from CC0 MakeHuman assets. `engine.restyle()` changes any of them without the
   photo.
+- `mask` events: the person's segmentation mask for each photo (MediaPipe's pose model, at most 256 px, 0–255),
+  for transitions that send the photo's person onto the character. `useCharacterScan` exposes them as `masks`.
+- Clips: `idle` and a friendly `wave` (arm out to the side, forearm up, palm forward, three swings from the elbow and
+  wrist, easing back to rest).
 - `eskais-character/three`: reference three.js materials for the styles (toon ramp, rim light, inverted-hull
   outline). `eskais-character/react`: `useCharacterScan(engine)`.
 - Privacy: photos stay in memory in the worker; the only network requests fetch pinned, SHA-256-checked model files.
