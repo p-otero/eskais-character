@@ -23,6 +23,36 @@ labels were made with Google's GHUM model; the card states no licence terms beyo
 terms could carry over is not documented anywhere official: UNVERIFIED, flagged for legal review if it matters).
 `/latest/` model URLs are not used: for `pose_landmarker_full`, `/latest/` served different bytes from `/1/`.
 
+## Hair catalogue (assets/hair)
+
+Geometry derived from CC0 MakeHuman hair by `tooling/bake/hair/bake_hair.py`: fitted with MakeHuman's proxy method,
+re-bound to Anny's head, transparent card areas cut away and strand brightness kept as a per-vertex shade. No texture
+or image from the packs is committed; the bake downloads the pinned zips (SHA-256 checked) into `.cache/hair-packs`.
+
+| Style                          | Source asset              | Pack                    | Author                              | Licence | Proof                                                                                                                                                                                     | Checked    |
+| ------------------------------ | ------------------------- | ----------------------- | ----------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| Short crop (`crop`)            | `short02`                 | MakeHuman system assets | MakeHuman team (Data Collection AB) | CC0-1.0 | `.mhclo` header: "explicitly released as CC0 in september 2020"; [asset packs page](https://static.makehumancommunity.org/assets/assetpacks/index.html): system assets "shared under CC0" | 2026-11-20 |
+| Side part (`side-part`)        | `short03`                 | MakeHuman system assets | MakeHuman team                      | CC0-1.0 | same                                                                                                                                                                                      | 2026-11-20 |
+| Short afro (`afro`)            | `afro01`                  | MakeHuman system assets | MakeHuman team                      | CC0-1.0 | same                                                                                                                                                                                      | 2026-11-20 |
+| Bob (`bob`)                    | `bob02`                   | MakeHuman system assets | MakeHuman team                      | CC0-1.0 | same                                                                                                                                                                                      | 2026-11-20 |
+| Bob with fringe (`fringe-bob`) | `littleright_bobcut_hair` | Hair 01                 | littleright                         | CC0-1.0 | [Hair 01 page](https://static.makehumancommunity.org/assets/assetpacks/hair01.html) lists it as CC0; `packs/hair01.json`: `"license": "CC0"`                                              | 2026-11-20 |
+| Long straight (`long`)         | `long01`                  | MakeHuman system assets | MakeHuman team                      | CC0-1.0 | `.mhclo` header, as above                                                                                                                                                                 | 2026-11-20 |
+| Ponytail (`ponytail`)          | `ponytail01`              | MakeHuman system assets | MakeHuman team                      | CC0-1.0 | same                                                                                                                                                                                      | 2026-11-20 |
+| Braid (`braid`)                | `braid01`                 | MakeHuman system assets | MakeHuman team                      | CC0-1.0 | same                                                                                                                                                                                      | 2026-11-20 |
+
+Pack downloads: [makehuman_system_assets_cc0.zip](https://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip)
+(SHA-256 `b542127a…0107`, 280,737,770 bytes) and [hair01_cc0.zip](https://files.makehumancommunity.org/asset_packs/hair01/hair01_cc0.zip)
+(SHA-256 `49445d69…40c9`, 227,775,853 bytes). The CC-BY packs (Hair 02, Hair 03) are not used.
+
+## Made in this repository (art pass)
+
+| Component | Where | Licence | Note | Checked |
+| --- | --- | --- | --- | --- |
+| Default outfit (tee or hoodie, joggers, sneakers) | `src/model/outfit.ts` | MIT (repository) | Shells of the fitted body itself, no third-party mesh or texture | 2026-11-20 |
+| Style presets, toon eyes, stylisation | `src/model/style.ts`, `eyes.ts`, `stylize.ts` | MIT (repository) | Data and procedural geometry | 2026-11-20 |
+| Idle and wave clips | `src/model/clips.ts` | MIT (repository) | Procedural keys; no mocap used yet | 2026-11-20 |
+| Demo assets for the UI library | `demo-assets/` | CC0-1.0 | Synthetic person, CC0 Anny/MakeHuman data, CC0 hair, our outfit and clips; see `demo-assets/LICENSE.md` | 2026-11-20 |
+
 ## Development only (not shipped)
 
 | Component                                                                       | Version                      | Licence                  | Note                                                                 |
